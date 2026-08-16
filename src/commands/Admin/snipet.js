@@ -1,53 +1,44 @@
-import axios from 'axios';
-import fs from 'fs';
-import path from 'path';
+import axios from "axios";
+import fs from "node:fs";
+import path from "node:path";
+import { pipeline } from "node:stream/promises";
 
 export default {
-  name: "snipet",
-  author: "Your Name",
+  name: "كود_مصوّر",
+  aliases: ["صورة_كود"],
+  author: "محمد الشاوني",
   role: "admin",
-  description: "توليد كودات على موقع سنيبت",
+  description: "تحويل كود JavaScript إلى صورة منسقة.",
+
   execute: async ({ api, event, args }) => {
-    // دمج الأكواد المدخلة من المستخدم
+    const { threadID, messageID } = event;
     const code = args.join(" ");
     if (!code) {
-      return api.sendMessage('❎ | المرجو إدحال كود', event.threadID);
+      return api.sendMessage("أرسل الكود بعد الأمر، مثل: .كود_مصوّر const x = 1", threadID, messageID);
     }
 
     try {
-      // طلب توليد الصورة باستخدام API
-      const { data } = await axios.post('https://www.noobs-api.000.pe/dipto/snippet', {
-        code: code,
-        lang: 'javascript'
+      const { data } = await axios.post("https://www.noobs-api.000.pe/dipto/snippet", {
+        code,
+        lang: "javascript"
+      }, { timeout: 15000 });
+
+      if (!data?.imageUrl) throw new Error("لم يُرجع الخادم رابط الصورة.");
+      const cacheDir = path.join(process.cwd(), "cache");
+      fs.mkdirSync(cacheDir, { recursive: true });
+      const imagePath = path.join(cacheDir, `snippet-${Date.now()}.jpg`);
+      const response = await axios.get(data.imageUrl, {
+        responseType: "stream",
+        timeout: 20000
       });
+      await pipeline(response.data, fs.createWriteStream(imagePath));
 
-      // جلب الصورة وحفظها في مجلد 'cache'
-      const imagePath = path.join(process.cwd(), 'cache', 'snippet.jpg');
-      const response = await axios({
-        url: data.imageUrl,
-        method: 'GET',
-        responseType: 'stream'
-      });
-
-      const writer = fs.createWriteStream(imagePath);
-      response.data.pipe(writer);
-
-      // حفظ الصورة وإرسالها
-      writer.on('finish', () => {
-        api.sendMessage({
-          body: "Here's Your snippet",
-          attachment: fs.createReadStream(imagePath)
-        }, event.threadID);
-      });
-
-      writer.on('error', (err) => {
-        console.error('Error while saving image:', err);
-        api.sendMessage('An error occurred while processing your request.', event.threadID);
-      });
-
+      return api.sendMessage({
+        body: "تم تجهيز صورة الكود داخل الظلال.",
+        attachment: fs.createReadStream(imagePath)
+      }, threadID, messageID);
     } catch (error) {
-      console.error('Error:', error);
-      api.sendMessage('An error occurred while processing your request.', event.threadID);
+      return api.sendMessage(`تعذر إنشاء الصورة: ${error.message}`, threadID, messageID);
     }
   }
 };

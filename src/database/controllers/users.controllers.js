@@ -1,103 +1,113 @@
-import { log } from "../../logger/index.js";
-import config from "../../KaguyaSetUp/config.js";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import fs from "fs-extra";
-import chokidar from "chokidar";
+import { log } from "../../logger/index.js";
+import config from "../../../KaguyaSetUp/config.js";
 
-const databaseType = config.database.type;
-const filePath = "./database/users.json";
+const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../");
+const filePath = path.join(projectRoot, "database", "users.json");
+const databaseType = config.database?.type || "json";
 
-if (!fs.existsSync(filePath)) {
-  fs.writeJsonSync(filePath, []);
+fs.ensureFileSync(filePath);
+if (fs.readFileSync(filePath, "utf8").trim() === "") {
+  fs.writeJsonSync(filePath, [], { spaces: 2 });
 }
 
-let usersData = fs.readJsonSync(filePath);
-const watcher = chokidar.watch(filePath);
-
-watcher.on("change", () => {
+const readUsers = () => {
   try {
-    usersData = fs.readJsonSync(filePath);
-  } catch (e) {
-    // Silent catch for rapid writes
+    const data = fs.readJsonSync(filePath);
+    return Array.isArray(data) ? data : [];
+  } catch {
+    return [];
   }
-});
+};
+
+const writeUsers = (data) => {
+  fs.writeJsonSync(filePath, data, { spaces: 2 });
+};
+
+const normalizeUid = (uid) => (uid === undefined || uid === null ? "" : String(uid));
 
 export default function ({ api }) {
   const getUserInfo = async (uid) => {
     try {
-        const data = await api.getUserInfo(uid);
-        return data?.[uid] ?? null;
-    } catch (e) {
-        return null;
+      const data = await api?.getUserInfo?.(uid);
+      return data?.[uid] ?? null;
+    } catch {
+      return null;
     }
   };
 
   const find = async (uid) => {
+    const normalizedUid = normalizeUid(uid);
+    if (!normalizedUid) return { status: false, data: null };
+
     try {
-      let user;
-      if (databaseType === "json") {
-        user = usersData.find((i) => i?.uid == uid);
-      }
-      return {
-        status: Boolean(user),
-        data: user || null,
-      };
-    } catch (error) {
-      return { status: false, data: "خطأ في نظام قاعدة البيانات!" };
+      const user = readUsers().find((item) => normalizeUid(item?.uid) === normalizedUid);
+      return { status: Boolean(user), data: user || null };
+    } catch {
+      return { status: false, data: null };
     }
   };
 
   const create = async (uid) => {
-    try {
-      if (!uid) return { status: false, data: "UID مطلوب!" };
-      const user = await find(uid);
-      if (user.status) return user;
+    const normalizedUid = normalizeUid(uid);
+    if (!normalizedUid) return { status: false, data: "UID مطلوب!" };
 
-      const userData = await getUserInfo(uid);
+    const existing = await find(normalizedUid);
+    if (existing.status) return existing;
+
+    try {
+      const users = readUsers();
+      const userInfo = await getUserInfo(normalizedUid);
       const dataUser = {
-        uid,
-        name: userData?.name || "Shadow Member",
+        uid: normalizedUid,
+        name: userInfo?.name || "عضو الظل",
         data: {
-          money: 1000, // Starting bonus
+          money: 1000,
           exp: 0,
           level: 1,
           banned: { status: false, reason: "", time: 0 },
           stats: { commandsUsed: 0, gamesWon: 0, points: 0 },
           joinedAt: Date.now()
-        },
+        }
       };
 
       if (databaseType === "json") {
-        usersData.push(dataUser);
-        fs.writeJsonSync(filePath, usersData, { spaces: 2 });
+        users.push(dataUser);
+        writeUsers(users);
       }
 
-      log([
+      await log([
         { message: "[ SHADOW DB ]: ", color: "purple" },
-        { message: `New member emerged from darkness: `, color: "white" },
-        { message: `${uid} - ${dataUser.name}`, color: "green" }
+        { message: `تم تسجيل عضو جديد في الحديقة: ${normalizedUid} - ${dataUser.name}`, color: "green" }
       ]);
 
       return { status: true, data: dataUser };
-    } catch (error) {
+    } catch {
       return { status: false, data: null };
     }
   };
 
-  const update = async (uid, data) => {
+  const update = async (uid, patch = {}) => {
+    const normalizedUid = normalizeUid(uid);
     try {
-      const index = usersData.findIndex((i) => i?.uid === uid);
-      if (index !== -1) {
-        usersData[index].data = { ...usersData[index].data, ...data };
-        fs.writeJsonSync(filePath, usersData, { spaces: 2 });
-        return { status: true, data: usersData[index] };
-      }
-      return { status: false, data: null };
-    } catch (error) {
+      const users = readUsers();
+      const index = users.findIndex((item) => normalizeUid(item?.uid) === normalizedUid);
+      if (index === -1) return { status: false, data: null };
+
+      users[index].data = {
+        ...(users[index].data || {}),
+        ...patch
+      };
+      writeUsers(users);
+      return { status: true, data: users[index] };
+    } catch {
       return { status: false, data: null };
     }
   };
 
-  const getAll = async () => ({ status: true, data: usersData });
+  const getAll = async () => ({ status: true, data: readUsers() });
 
   return { create, find, update, getAll };
 }

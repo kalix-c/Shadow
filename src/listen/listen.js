@@ -1,6 +1,6 @@
 import { CommandHandler } from "../handler/handlers.js";
 import { threadsController, usersController, economyControllers, expControllers, statsControllers } from "../database/controllers/index.js";
-import { utils } from "../helper/index.js";
+import { utils } from "../../helper/index.js";
 
 /**
  * Tạo một trình xử lý sự kiện với các đối tượng và đối số cụ thể.
@@ -21,7 +21,7 @@ const createHandler = (api, event, User, Thread, Economy, Exp, Stats) => {
  * Xử lý sự kiện chính.
  * @param {object} options - Các tùy chọn xử lý sự kiện.
  */
-const listen = async ({ api, event }) => {
+const listen = async ({ api, event, client = global.client }) => {
   try {
     const { threadID, senderID, type, userID, from, isGroup } = event;
     const Thread = threadsController({ api });
@@ -37,10 +37,10 @@ const listen = async ({ api, event }) => {
       await User.create(senderID || userID || from);
     }
 
-    global.kaguya = utils({ api, event });
+    global.kaguya = utils({ api, event, client });
 
     const handler = createHandler(api, event, User, Thread, Economy, Exp, Stats);
-    handler.handleEvent();
+    await handler.handleEvent();
 
     switch (type) {
       case "message":

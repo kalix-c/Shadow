@@ -1,7 +1,18 @@
 node_modules/
+
+# جلسة Messenger والأسرار
 KaguyaSetUp/KaguyaState.json
-database/users.json
-database/threads.json
+.env
+.env.*
+*.pem
+*.key
+*.token
+
+# بيانات التشغيل المحلية
+/database/*.json
+!/database/.gitkeep
+
+# ملفات مؤقتة ووسائط مولدة
 cache/
 temp/
 *.mp4
@@ -9,5 +20,4 @@ temp/
 *.jpg
 *.jpeg
 *.gif
-.env
 .DS_Store

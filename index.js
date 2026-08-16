@@ -4,7 +4,7 @@ import { listen } from "./src/listen/listen.js";
 import './src/utils/kaguya.js';
 import { commandMiddleware, eventMiddleware } from "./src/middleware/index.js";
 import sleep from "time-sleep";
-import { log, notifer } from "./logger/index.js";
+import { log, notifer } from "./src/logger/index.js";
 import gradient from "gradient-string";
 import chokidar from "chokidar";
 import config from "./KaguyaSetUp/config.js";
@@ -103,8 +103,9 @@ class Shadow extends EventEmitter {
 
       this.on("system:run", () => {
         login({ appState: credentials }, async (err, api) => {
-          if (err) {
-            this.emit("system:error", `Login failed: ${err}`);
+          if (err || !api) {
+            this.emit("system:error", `Login failed: ${err?.message || err || "Unknown login error"}`);
+            return;
           }
 
           api.setOptions(this.currentConfig.options);

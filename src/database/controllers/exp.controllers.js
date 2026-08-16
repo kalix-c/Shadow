@@ -1,82 +1,59 @@
-import usersControllers from "./users.controllers.js";
+import usersController from "./users.controllers.js";
 
-export default function ({ api, event }) {
-  const action = async (action, uid, count = 0) => {
-    const controllers = usersControllers({ api });
-    const users = await controllers.find(uid);
+export default function ({ api }) {
+  const requiredForNextLevel = (level) => 100 + Number(level) * 50;
 
-    if (!users.status) {
-      return {
-        status: false,
-        data: "Không tìm thấy thông tin user",
-      };
-    }
-
-    switch (action) {
-      case "increase": {
-        var expIncrease = +users.data.data.exp + count;
-        var currentLevel = +users.data.data.level;
-        var levelUpExp = 100 + currentLevel * 50;
-        let newLevel = currentLevel;
-
-        while (expIncrease >= levelUpExp) {
-          newLevel += 1;
-          expIncrease -= levelUpExp;
-          levelUpExp = 100 + newLevel * 50;
-        }
-
-        var updatedUser = await controllers.update(uid, { level: newLevel, exp: expIncrease });
-
-        if (updatedUser.status) {
-          if (newLevel > currentLevel) {
-            return {
-              status: "level_up",
-              data: `Người dùng đã tăng cấp lên cấp ${newLevel}`,
-            };
-          } else {
-            return {
-              status: true,
-              data: `Kinh nghiệm của người dùng đã tăng lên ${expIncrease}`,
-            };
-          }
-        } else {
-          return {
-            status: false,
-            data: "Lỗi khi cập nhật thông tin người dùng",
-          };
-        }
-      }
-
-      case "check": {
-        const exp = +users.data.data.exp;
-        const currentLevel = +users.data.data.level;
-        const levelUpExp = 100 + currentLevel * 50;
-        const expNeededForNextLevel = levelUpExp - exp;
-
-        return {
-          status: true,
-          data: {
-            currentLevel,
-            exp,
-            expNeededForNextLevel,
-          },
-        };
-      }
-      default:
-        return {
-          status: false,
-          data: "Hành động không hợp lệ",
-        };
-    }
-  };
   const increase = async (uid, count = 0) => {
-    return await action("increase", uid, count);
+    const users = usersController({ api });
+    const record = await users.find(uid);
+    const amount = Number(count);
+
+    if (!record.status) return { status: false, data: "لم يتم العثور على حساب العضو." };
+    if (!Number.isFinite(amount) || amount <= 0) {
+      return { status: false, data: "يجب أن تكون الخبرة المضافة رقمًا موجبًا." };
+    }
+
+    let exp = Number(record.data?.data?.exp || 0) + amount;
+    let level = Number(record.data?.data?.level || 1);
+    const previousLevel = level;
+
+    while (exp >= requiredForNextLevel(level)) {
+      exp -= requiredForNextLevel(level);
+      level += 1;
+    }
+
+    const updated = await users.update(uid, { exp, level });
+    if (!updated.status) return { status: false, data: "تعذر تحديث خبرة العضو." };
+
+    return {
+      status: level > previousLevel ? "level_up" : true,
+      data: {
+        level,
+        exp,
+        gained: amount,
+        message: level > previousLevel
+          ? `ارتقى العضو إلى المستوى ${level}!`
+          : `تمت إضافة ${amount} نقطة خبرة.`
+      }
+    };
   };
+
   const check = async (uid) => {
-    return await action("check", uid);
+    const users = usersController({ api });
+    const record = await users.find(uid);
+    if (!record.status) return { status: false, data: "لم يتم العثور على حساب العضو." };
+
+    const exp = Number(record.data?.data?.exp || 0);
+    const level = Number(record.data?.data?.level || 1);
+    return {
+      status: true,
+      data: {
+        currentLevel: level,
+        exp,
+        expNeededForNextLevel: Math.max(requiredForNextLevel(level) - exp, 0)
+      }
+    };
   };
-  return {
-    increase,
-    check,
-  };
+
+  return { increase, check };
 }

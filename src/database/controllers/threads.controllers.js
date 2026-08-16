@@ -1,5 +1,5 @@
 import threadsModels from "../models/threads.models.js";
-import config from "../../KaguyaSetUp/config.js";
+import config from "../../../KaguyaSetUp/config.js";
 import { log } from "../../logger/index.js";
 import fs from "fs-extra";
 import chokidar from "chokidar";

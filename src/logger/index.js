@@ -11,20 +11,26 @@ const colors = {
   white: "#ffffff",
   gray: "#808080",
   ocean: "#00bfff",
+  purple: "#9b59b6"
 };
-export const log = async (messages) => {
-  const logMessage = messages.map(({ message, color }) => chalk.hex(colors[color])(message)).join("");
-  console.log(logMessage, "");
+
+export const log = async (messages = []) => {
+  const logMessage = messages
+    .map(({ message = "", color = "white" }) => {
+      const hex = colors[color] || colors.white;
+      return chalk.hex(hex)(String(message));
+    })
+    .join("");
+  console.log(logMessage);
 };
 
 export const notifer = async (title, message) => {
-  var opsys = process.platform;
-  if (opsys == "win32" || opsys == "win64") {
+  if (process.platform === "win32" || process.platform === "win64") {
     notifier.notify({
-      appName: "Kaguya Project",
+      appName: "Shadow Bot",
       title,
       message,
-      icon: "./helper/logo.jpg",
+      icon: "./helper/logo.jpg"
     });
   }
 };

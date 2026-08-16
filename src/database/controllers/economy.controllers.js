@@ -1,36 +1,58 @@
 import usersController from "./users.controllers.js";
 
 export default function ({ api, event }) {
-  const formatCurrency = (number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USA", maximumFractionDigits: 9 }).format(number);
+  const formatCurrency = (amount) => `${new Intl.NumberFormat("ar-MA").format(amount)} عملة ظل`;
+  const toCoins = (value) => Number(value);
 
   const performTransaction = async ({ action, uid, coins }) => {
     try {
-      const data = usersController({ api });
-      const user = await data.find(uid);
-      const sender = await data.find(event.senderID);
-      const actionMessage = action === "increase" ? "cộng" : action === "decrease" ? "trừ" : "chuyển";
+      const users = usersController({ api });
+      const target = await users.find(uid);
+      const sender = await users.find(event?.senderID);
+      const amount = toCoins(coins);
 
-      if (!user.status || !sender.status) return { status: false, data: `No information found in database` };
+      if (!target.status || !sender.status) {
+        return { status: false, data: "لم يتم العثور على حساب العضو في قاعدة البيانات." };
+      }
+      if (!Number.isFinite(amount) || amount <= 0) {
+        return { status: false, data: "يجب أن تكون قيمة العملات رقمًا موجبًا." };
+      }
 
-      const isInvalidCoins = !coins || isNaN(coins) || coins <= 0;
-      const notEnoughCoins = action === "pay" && sender.data.data.money < coins;
-      const negativeTotal = (action === "increase" || action === "pay") && user.data.data.money + coins < 0;
+      const targetMoney = Number(target.data?.data?.money || 0);
+      const senderMoney = Number(sender.data?.data?.money || 0);
+      const targetName = target.data?.name || "عضو الظل";
 
-      if (isInvalidCoins || notEnoughCoins || negativeTotal) return { status: false, data: `Number of coins desired ${actionMessage} invalid or invalid or insifisant` };
+      if (action === "decrease" && targetMoney < amount) {
+        return { status: false, data: "لا يملك العضو رصيدًا كافيًا." };
+      }
+      if (action === "pay" && senderMoney < amount) {
+        return { status: false, data: "رصيدك لا يكفي لإتمام التحويل." };
+      }
 
-      const total = action === "increase" || action === "pay" ? user.data.data.money + coins : user.data.data.money - coins;
-      const senderMoney = sender.data.data.money;
+      if (action === "increase") {
+        await users.update(uid, { money: targetMoney + amount });
+        return { status: true, data: `تمت إضافة ${formatCurrency(amount)} إلى حساب ${targetName}.` };
+      }
 
-      await data.update(event.senderID, { money: action === "pay" ? senderMoney - coins : senderMoney });
-      await data.update(uid, { money: total });
+      if (action === "decrease") {
+        await users.update(uid, { money: targetMoney - amount });
+        return { status: true, data: `تم خصم ${formatCurrency(amount)} من حساب ${targetName}.` };
+      }
 
-      return {
-        status: true,
-        data: ` ${actionMessage} success ${formatCurrency(coins)} on the user: ${user.data.data.name}`,
-      };
-    } catch (err) {
-      console.log(err);
-      return { status: false, data: "An error occurred at controllers economy" };
+      if (action === "pay") {
+        const senderUid = String(event?.senderID ?? "");
+        const targetUid = String(uid ?? "");
+        if (senderUid === targetUid) {
+          return { status: false, data: "لا يمكنك تحويل العملات إلى حسابك." };
+        }
+        await users.update(senderUid, { money: senderMoney - amount });
+        await users.update(targetUid, { money: targetMoney + amount });
+        return { status: true, data: `تم تحويل ${formatCurrency(amount)} إلى ${targetName}.` };
+      }
+
+      return { status: false, data: "نوع العملية غير مدعوم." };
+    } catch {
+      return { status: false, data: "حدث خطأ أثناء تنفيذ العملية الاقتصادية." };
     }
   };
 
@@ -40,13 +62,13 @@ export default function ({ api, event }) {
 
   const getBalance = async (uid) => {
     try {
-      const data = usersController({ api });
-      const user = await data.find(uid);
-
-      return user.status ? { status: true, data: user.data.data.money } : { status: false, data: "User not found in database" };
-    } catch (err) {
-      console.log(err);
-      return { status: false, data: "An error occurred at controllers economy" };
+      const users = usersController({ api });
+      const user = await users.find(uid);
+      return user.status
+        ? { status: true, data: Number(user.data?.data?.money || 0) }
+        : { status: false, data: "لم يتم العثور على حساب العضو." };
+    } catch {
+      return { status: false, data: "حدث خطأ أثناء قراءة الرصيد." };
     }
   };
 

@@ -31,7 +31,8 @@ export class CommandHandler {
       const prefix = this.config.prefix || "!";
       
       // Shadow handles both prefixed and non-prefixed for admins, but enforces prefix for others
-      const isAdmin = this.config.ADMIN_IDS.includes(senderID);
+      const adminIds = Array.isArray(this.config.ADMIN_IDS) ? this.config.ADMIN_IDS.map(String) : [];
+      const isAdmin = adminIds.includes(String(senderID));
       
       let commandBody = body;
       let usedPrefix = "";
@@ -107,24 +108,35 @@ export class CommandHandler {
       log([{ message: "[ SHADOW EXEC ]: ", color: "purple" }, { message: `${command.name} by ${senderID}`, color: "white" }]);
       
       // Update Stats
-      const Stats = this.arguments.Stats || (typeof this.arguments.StatsController === 'function' ? this.arguments.StatsController() : null);
-      if (Stats) Stats.incrementCommand(command.name, senderID);
-      
-      command.execute({ ...this.arguments, args });
+      const Stats = this.arguments.Stats || (typeof this.arguments.StatsController === "function" ? this.arguments.StatsController() : null);
+      if (Stats?.incrementCommand) await Stats.incrementCommand(command.name, senderID);
+
+      const currentUser = await Users.find(senderID);
+      if (currentUser?.status) {
+        const currentStats = currentUser.data?.data?.stats || {};
+        await Users.update(senderID, {
+          stats: {
+            ...currentStats,
+            commandsUsed: Number(currentStats.commandsUsed || 0) + 1
+          }
+        });
+      }
+
+      await command.execute({ ...this.arguments, args });
       
     } catch (error) {
       log([{ message: "[ SHADOW ERROR ]: ", color: "red" }, { message: error.message, color: "white" }]);
     }
   }
 
-  handleEvent() {
+  async handleEvent() {
     try {
-      this.commands.forEach((cmd) => {
-        if (cmd.events) cmd.events({ ...this.arguments });
-      });
-      this.events.forEach((ev) => {
-        ev.execute({ ...this.arguments });
-      });
+      for (const cmd of this.commands.values()) {
+        if (typeof cmd.events === "function") await cmd.events({ ...this.arguments });
+      }
+      for (const ev of this.events.values()) {
+        if (typeof ev.execute === "function") await ev.execute({ ...this.arguments });
+      }
     } catch (err) {
       console.error("Event Handler Error:", err);
     }
