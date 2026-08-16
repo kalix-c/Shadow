@@ -1,8 +1,8 @@
-import fs from "fs";
+import fs from "node:fs";
 import login from "@trunqkj3n/kaguya";
-import { listen } from "./listen/listen.js";
-import './utils/kaguya.js';
-import { commandMiddleware, eventMiddleware } from "./middleware/index.js";
+import { listen } from "./src/listen/listen.js";
+import './src/utils/kaguya.js';
+import { commandMiddleware, eventMiddleware } from "./src/middleware/index.js";
 import sleep from "time-sleep";
 import { log, notifer } from "./logger/index.js";
 import gradient from "gradient-string";
@@ -12,25 +12,17 @@ import EventEmitter from "events";
 import axios from "axios";
 import semver from "semver";
 
-// replacr 
-  login({email: "", password: ""}, (err, api) => {
-  if(err) return console.error(err);
-
-  // login
-  fs.writeFileSync('KaguyaState.json', JSON.stringify(api.getAppState())); // create appstate
-});
-
-class Kaguya extends EventEmitter {
+class Shadow extends EventEmitter {
   constructor() {
     super();
     this.on("system:error", (err) => {
       log([
         {
-          message: "[ ERROR ]: ",
+          message: "[ SHADOW ERROR ]: ",
           color: "red",
         },
         {
-          message: `Error! An error occurred. Please try again later: ${err}`,
+          message: `Error in the Garden of Shadows: ${err}`,
           color: "white",
         },
       ]);
@@ -38,83 +30,58 @@ class Kaguya extends EventEmitter {
     });
     this.currentConfig = config;
     this.watcher = chokidar.watch("./KaguyaSetUp/config.js");
-    this.credentials = fs.readFileSync("./KaguyaSetUp/KaguyaState.json");
+    this.statePath = "./KaguyaSetUp/KaguyaState.json";
     this.package = JSON.parse(fs.readFileSync("./package.json"));
     this.setupEventListeners();
-    this.checkCredentials();
   }
 
   setupEventListeners() {
     this.watcher.on("change", async () => {
       try {
-        const updatedConfig = await import("./KaguyaSetUp/config.js");
+        const updatedConfig = await import("./KaguyaSetUp/config.js?update=" + Date.now());
         this.currentConfig = updatedConfig.default;
+        global.client.config = this.currentConfig;
+        log([{ message: "[ SYSTEM ]: ", color: "green" }, { message: "Shadow configuration updated.", color: "white" }]);
       } catch (error) {
-        this.emit("system:error", "Unable to load new config!");
+        this.emit("system:error", "Unable to reload Shadow configuration!");
       }
     });
   }
 
   checkCredentials() {
+    if (!fs.existsSync(this.statePath)) {
+        this.emit("system:error", `Credential file not found at ${this.statePath}. Shadow cannot emerge from the darkness without it.`);
+    }
     try {
-      const credentialsArray = JSON.parse(this.credentials);
-
+      const credentials = fs.readFileSync(this.statePath, "utf8");
+      const credentialsArray = JSON.parse(credentials);
       if (!Array.isArray(credentialsArray) || credentialsArray.length === 0) {
-        this.emit("system:error", "Please go to KaguyaSetUp/KaguyaState.json folder and fill in appstate!");
-        process.exit(0);
+        this.emit("system:error", "Shadow State file is empty. Please provide a valid appstate.");
       }
+      return credentialsArray;
     } catch (error) {
-      this.emit("system:error", "Cannot parse JSON credentials string in folder KaguyaSetUp/KaguyaState.json");
+      this.emit("system:error", "Failed to parse Shadow State. Ensure it is a valid JSON array.");
     }
   }
 
-  async checkVersion() {
-    try {
-      const redToGreen = gradient("white", "green");
-      console.log(redToGreen("■".repeat(50), { interpolation: "hsv" }));
-      console.log(`${gradient(["#4feb34", "#4feb34"])("[ AUTHOR ]: ")} ${gradient("cyan", "pink")("Arjhil Dacayanan")}`);
-      console.log(`${gradient(["#4feb34", "#4feb34"])("[ Facebook ]: ")} ${gradient("cyan", "pink")("https://www.facebook.com/arjhil.dacayanan.73?mibextid=ZbWKwL")}`);
-
-      const { data } = await axios.get("https://raw.githubusercontent.com/Tshukie/Kaguya-Pr0ject/master/package.json");
-      if (semver.lt(this.package.version, (data.version ??= this.package.version))) {
-        log([
-          {
-            message: "[ SYSTEM ]: ",
-            color: "yellow",
-          },
-          {
-            message: `New Update contact the owner: https://www.facebook.com/arjhil.dacayanan.73?mibextid=ZbWKwL`,
-            color: "white",
-          },
-        ]);
-      }
-
-      let currentFrame = 0;
-      const interval = setInterval(() => {
-        process.stdout.write("\b".repeat(currentFrame));
-        const frame = redToGreen("■".repeat(currentFrame), { interpolation: "hsv" });
-        process.stdout.write(frame);
-
-        currentFrame++;
-        if (currentFrame > 50) {
-          clearInterval(interval);
-          process.stdout.write("\n");
-          this.emit("system:run");
-        }
-      }, 10);
-    } catch (err) {
-      this.emit("system:error", err);
-    }
+  async displayIntro() {
+    const shadowGradient = gradient("#2c3e50", "#000000", "#2c3e50");
+    const neonPurple = gradient("#8e44ad", "#9b59b6");
+    
+    console.log(shadowGradient("=".repeat(50)));
+    console.log(neonPurple("         ⚡ THE EMINENCE IN SHADOW ⚡         "));
+    console.log(shadowGradient("=".repeat(50)));
+    console.log(`${neonPurple("[ STATUS ]:")} Shadow is lurking in the darkness...`);
+    console.log(`${neonPurple("[ VERSION ]:")} ${this.package.version}`);
+    console.log(shadowGradient("-".repeat(50)));
+    
+    this.emit("system:run");
   }
 
   start() {
-    setInterval(() => {
-      const t = process.uptime();
-      const [i, a, m] = [Math.floor(t / 3600), Math.floor((t % 3600) / 60), Math.floor(t % 60)].map((num) => (num < 10 ? "0" + num : num));
-      const formatMemoryUsage = (data) => `${Math.round((data / 1024 / 1024) * 100) / 100} MB`;
-      const memoryData = process.memoryUsage();
-      process.title = `Kaguya Project - Author: Arjhil Dacayanan - ${i}:${a}:${m} - External: ${formatMemoryUsage(memoryData.external)}`;
-    }, 1000);
+    process.title = `Shadow Bot - The Eminence in Shadow - v${this.package.version}`;
+    
+    const credentials = this.checkCredentials();
 
     (async () => {
       global.client = {
@@ -131,12 +98,13 @@ class Kaguya extends EventEmitter {
 
       await commandMiddleware();
       await eventMiddleware();
-      this.checkVersion();
+      
+      this.displayIntro();
 
       this.on("system:run", () => {
-        login({ appState: JSON.parse(this.credentials) }, async (err, api) => {
+        login({ appState: credentials }, async (err, api) => {
           if (err) {
-            this.emit("system:error", err);
+            this.emit("system:error", `Login failed: ${err}`);
           }
 
           api.setOptions(this.currentConfig.options);
@@ -147,40 +115,24 @@ class Kaguya extends EventEmitter {
                 listenMqtt.isListening = true;
                 const mqtt = await api.listenMqtt(async (err, event) => {
                   if (err) {
-                    this.on("error", err);
+                    log([{ message: "[ MQTT ERROR ]: ", color: "red" }, { message: err.message, color: "white" }]);
                   }
-                  await listen({ api, event, client: global.client });
+                  if (event) {
+                    await listen({ api, event, client: global.client });
+                  }
                 });
+                
                 await sleep(this.currentConfig.mqtt_refresh);
-                notifer("[ MQTT ]", "Mqtt refresh in progress!");
-                log([
-                  {
-                    message: "[ MQTT ]: ",
-                    color: "yellow",
-                  },
-                  {
-                    message: `Refresh mqtt in progress!`,
-                    color: "white",
-                  },
-                ]);
+                log([{ message: "[ MQTT ]: ", color: "purple" }, { message: "Refreshing Shadow connection...", color: "white" }]);
+                
                 await mqtt.stopListening();
                 await sleep(5000);
-                notifer("[ MQTT ]", "Refresh successful!");
-                log([
-                  {
-                    message: "[ MQTT ]: ",
-                    color: "green",
-                  },
-                  {
-                    message: `Refresh successful!`,
-                    color: "white",
-                  },
-                ]);
                 listenMqtt.isListening = false;
               }
               listenMqtt();
             } catch (error) {
-              this.emit("system:error", error);
+              log([{ message: "[ CRITICAL ]: ", color: "red" }, { message: `Shadow connection lost: ${error.message}`, color: "white" }]);
+              setTimeout(listenMqtt, 10000);
             }
           };
 
@@ -192,5 +144,5 @@ class Kaguya extends EventEmitter {
   }
 }
 
-const KaguyaInstance = new Kaguya();
-KaguyaInstance.start();
+const ShadowInstance = new Shadow();
+ShadowInstance.start();

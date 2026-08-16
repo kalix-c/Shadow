@@ -1,14 +1,14 @@
-    export default {
-      "prefix": "*",
-      "language": "ar_MA",
-      "BOT_NAME": "ⓀⒶⒼⓊⓎⒶ",
-      "ADMIN_IDS": [
-        "100076269693499",
-        "100054133070771",
-        "100088067552203"
-      ],
-      "botEnabled": true,
-         "options": {
+export default {
+    "prefix": "!",
+    "language": "ar_MA",
+    "BOT_NAME": "⚡ 𝐒𝐇𝐀𝐃𝐎𝐖 ⚡",
+    "ADMIN_IDS": [
+      "100076269693499",
+      "100054133070771",
+      "100088067552203"
+    ],
+    "botEnabled": true,
+    "options": {
         "forceLogin": true,
         "listenEvents": true,
         "listenTyping": false,
