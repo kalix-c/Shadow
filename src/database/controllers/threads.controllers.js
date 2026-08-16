@@ -4,7 +4,9 @@ import { log } from "../../logger/index.js";
 import fs from "fs-extra";
 const filePath = "./database/threads.json";
 
-let threadsJSON = JSON.parse(fs.readFileSync(filePath));
+fs.ensureFileSync(filePath);
+const rawThreads = fs.readFileSync(filePath, "utf8").trim();
+let threadsJSON = rawThreads ? JSON.parse(rawThreads) : [];
 
 export default function ({ api }) {
   const getThreadInfo = async (tid) => {
