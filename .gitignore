@@ -1,0 +1,13 @@
+node_modules/
+KaguyaSetUp/KaguyaState.json
+database/users.json
+database/threads.json
+cache/
+temp/
+*.mp4
+*.png
+*.jpg
+*.jpeg
+*.gif
+.env
+.DS_Store
