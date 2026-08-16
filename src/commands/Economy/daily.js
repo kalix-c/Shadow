@@ -4,7 +4,7 @@ import fs from "fs";
 class CheckTT {
   constructor() {
     this.name = "هدية";
-    this.author = "Kaguya Project";
+    this.author = "Shadow Garden Project";
     this.role = "member";
     this.description = "الحصول على مال اليومي كل يوم";
     this.aliases = ["هديه"];

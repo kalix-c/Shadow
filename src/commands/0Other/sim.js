@@ -1,6 +1,6 @@
 export default {
   name: "سرقة",
-  author: "Kaguya Project",
+  author: "Shadow Garden Project",
   role: "admin",
   description: "يستولي على أعضاء المجموعة الحالية وينقلهم إلى مجموعة الدعم.",
   cooldowns: 60,

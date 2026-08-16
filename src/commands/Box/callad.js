@@ -4,7 +4,7 @@ import path from "path";
 
 export default {
   name: "تطقيم",
-  author: "Kaguya Project 1",
+  author: "Shadow Garden Project 1",
   description: "جلب صورة لزوجين أنمي",
   role: "member",
   execute: async ({ api, event, Economy }) => {

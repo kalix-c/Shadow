@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const evalCommand = {
   name: "إشعار",
-  author: "Kaguya Project",
+  author: "Shadow Garden Project",
   cooldowns: 5,
   description: "إرسال إشعار إلى جميع المجموعات!",
   role: "admin",

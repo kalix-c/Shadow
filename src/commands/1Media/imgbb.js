@@ -2,7 +2,7 @@ import axios from 'axios';
 
 class ImageUploader {
   name = "رابط3";
-  author = "Kaguya Project";
+  author = "Shadow Garden Project";
   role = "member"; // يمكن تعديل الدور حسب الحاجة
   description = "يستخدم لرفع الصور من المرفقات";
   aliases = [];

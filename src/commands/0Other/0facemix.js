@@ -111,7 +111,7 @@ async function onReply({ api, event, reply, Economy, Users }) {
 
 export default {
   name: "كهف",
-  author: "Kaguya Project",
+  author: "Shadow Garden Project",
   cooldowns: 50,
   description: "لعبة الكهف للعمل في المناجم و كسب المال",
   role: "member",

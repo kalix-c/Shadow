@@ -5,7 +5,7 @@ const emojiJSON = JSON.parse(fs.readFileSync("./cache12/emoji/emoji.json", "utf-
 
 export default {
   name: "دمج",
-  author: "Kaguya Project",
+  author: "Shadow Garden Project",
   role: "member",
   cooldowns: 10,
   description: "دمج إثنان من الإيموجي",

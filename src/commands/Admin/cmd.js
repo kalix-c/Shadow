@@ -4,7 +4,7 @@ import path from "path";
 class CMD {
   constructor() {
     this.name = "كمند";
-    this.author = "Kaguya Project";
+    this.author = "Shadow Garden Project";
     this.role = "owner";
     this.description = "تحميل  تحميل كل الأوامر";
     this.cooldown = 10;

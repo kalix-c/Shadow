@@ -1,8 +1,8 @@
 import fetch from 'node-fetch';
 
 export default {
-  name: "كاغويا",
-  author: "Kaguya Project",
+  name: "شادو",
+  author: "Shadow Garden Project",
   role: "member",
   aliases: ["بوت"],
   description: "يرسل ملصق عشوائياً أو يتفاعل مع الذكاء الاصطناعي.",
@@ -25,14 +25,14 @@ export default {
 
     const query = args.join(" ").trim();
 
-    // إذا لم يتم إدخال شيء سوى "كاغويا" أو "بوت"، أرسل ملصق عشوائي
+    // إذا لم يتم إدخال شيء سوى "شادو" أو "بوت"، أرسل ملصق عشوائي
     if (!query) {
       const sticker = data[Math.floor(Math.random() * data.length)];
       const msg = { sticker };
       return api.sendMessage(msg, event.threadID, event.messageID);
     }
 
-    // إذا كان هناك استعلام مع "كاغويا" أو "بوت"، استخدم الذكاء الاصطناعي
+    // إذا كان هناك استعلام مع "شادو" أو "بوت"، استخدم الذكاء الاصطناعي
     try {
       api.setMessageReaction("⏳", event.messageID, () => {}, true);
 
@@ -50,7 +50,7 @@ export default {
       global.client.handler.reply.set(event.messageID, {
         author: event.senderID,
         type: "reply",
-        name: "كاغويا",
+        name: "شادو",
         unsend: false,
       });
 
@@ -63,7 +63,7 @@ export default {
   async onReply({ api, event, reply }) {
     const { threadID, messageID, body, senderID } = event;
 
-    if (reply.type === "reply" && reply.name === "كاغويا") {
+    if (reply.type === "reply" && reply.name === "شادو") {
       const query = body.trim();
       if (!query) return;
 

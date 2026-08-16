@@ -188,7 +188,7 @@ const animeImageLinks = [
 
 export default {
   name: "افلام",
-  author: "Kaguya Project",
+  author: "Shadow Garden Project",
   role: "member",
   aliases:["أفلام"],
   description: "يقترح عليك افلام عشوائية من اجل مشاهدتها",

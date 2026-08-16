@@ -4,7 +4,7 @@ import path from 'path';
 
 export default {
   name: "بنك",
-  author: "Kaguya Project",
+  author: "Shadow Garden Project",
   role: "user",
   description: "أوامر البنك المختلفة (رصيدي، إيداع، سحب، تسجيل).",
   

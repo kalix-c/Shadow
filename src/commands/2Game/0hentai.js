@@ -37,7 +37,7 @@ async function fetchGroupImage({ api, event }) {
 
 export default {
     name: "تيد",
-    author: "Kaguya Project",
+    author: "Shadow Garden Project",
     role: "member",
     description: "يقوم بجلب صورة المجموعة إذا كانت موجودة.",
     execute: fetchGroupImage

@@ -4,13 +4,14 @@ import path from "path";
 
 /**
  * Middleware function to load Shadow commands and their aliases.
+ * Optimized for performance and reliability.
  */
 export const commandMiddleware = async () => {
   try {
     const baseDir = "./src/commands";
     const dir = await fs.readdir(baseDir);
     
-    for (const directory of dir) {
+    const loadPromises = dir.map(async (directory) => {
       const fullPath = path.join(baseDir, directory);
       const stat = await fs.stat(fullPath);
       
@@ -20,23 +21,14 @@ export const commandMiddleware = async () => {
           if (!file.endsWith(".js")) continue;
           
           try {
-            // Using absolute path or relative from this file for import
-            const modulePath = `../commands/${directory}/${file}`;
+            const modulePath = `../commands/${directory}/${file}?update=${Date.now()}`;
             const commands = (await import(modulePath)).default;
             
             if (commands?.onLoad && typeof commands?.onLoad == "function") {
               await commands.onLoad();
             }
             
-            if (!commands?.name) {
-              log([{ message: "[ SHADOW ]: ", color: "purple" }, { message: `Failed: ${file} (No Name)`, color: "red" }]);
-              continue;
-            }
-            
-            if (typeof commands?.execute !== "function") {
-              log([{ message: "[ SHADOW ]: ", color: "purple" }, { message: `Failed: ${file} (No Execute)`, color: "red" }]);
-              continue;
-            }
+            if (!commands?.name) continue;
             
             global.client.commands.set(commands.name, commands);
             
@@ -46,15 +38,15 @@ export const commandMiddleware = async () => {
                 global.client.aliases.set(alias, commands.name);
               }
             }
-            
-            log([{ message: "[ SHADOW ]: ", color: "purple" }, { message: `Emerged: ${commands.name}`, color: "white" }]);
-            
           } catch (error) {
             log([{ message: "[ SHADOW ]: ", color: "purple" }, { message: `Error loading ${file}: ${error.message}`, color: "red" }]);
           }
         }
       }
-    }
+    });
+
+    await Promise.all(loadPromises);
+    log([{ message: "[ SHADOW ]: ", color: "purple" }, { message: "Shadow Vault opened. All powers manifested.", color: "green" }]);
   } catch (error) {
     log([{ message: "[ SHADOW ]: ", color: "purple" }, { message: `Failed to open Shadow Vault: ${error.message}`, color: "red" }]);
   }

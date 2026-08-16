@@ -3,7 +3,7 @@ import path from 'path';
 
 const command = {
   name: "ملف",
-  author: "Kaguya Project",
+  author: "Shadow Garden Project",
   role: "owner",
   description: "إرسال محتوى ملف الأمر المحدد وملف الجافا سكريبت نفسه إلى المستخدم.",
 

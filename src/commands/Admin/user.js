@@ -1,6 +1,6 @@
 export default {
   name: "المستخدم",
-  author: "Kaguya Project",
+  author: "Shadow Garden Project",
   cooldowns: 0,
   description: "حظر أو رفع الخظر عن مستخدم من إستخدام البوت",
   role: "owner",

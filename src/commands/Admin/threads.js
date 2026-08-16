@@ -1,6 +1,6 @@
 class Threads {
   name = "المجموعة";
-  author = "Kaguya Project";
+  author = "Shadow Garden Project";
   cooldowns = 0;
   description = "منع المجموعات من استخدام البوت";
   role = "owner";

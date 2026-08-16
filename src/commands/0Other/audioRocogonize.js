@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export default {
   name: "تحليل",
-  author: "Kaguya Project",
+  author: "Shadow Garden Project",
   role: "member",
   description: "التعرف على الموسيقى من وجلب المعلومات",
   execute: async function({ api, event }) {

@@ -21,7 +21,7 @@ crFile(antiIMG);
 class AntiboxImage {
   constructor() {
     this.name = 'حماية_الصورة';
-    this.author = 'Kaguya Project';
+    this.author = 'Shadow Garden Project';
     this.cooldowns = 60;
     this.description = 'حماية المجموعة من تغيير صورتها!';
     this.role = 'admin';

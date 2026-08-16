@@ -2,7 +2,7 @@ import axios from "axios";
 
 export default {
   name: "كود",
-  author: "Kaguya Project",
+  author: "Shadow Garden Project",
   role: "admin",
   description: "Installs a new command script from a provided content or URL link.",
 

@@ -12,7 +12,7 @@ async function gpt4(prompt, customId) {
 
 export default {
   name: "ذكاء",
-  author: "Kaguya Project",
+  author: "Shadow Garden Project",
   role: "member",
   description: "يتفاعل مع الذكاء الاصطناعي ويواصل المحادثة",
 

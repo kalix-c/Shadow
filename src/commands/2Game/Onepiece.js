@@ -111,7 +111,7 @@ async function sendVideoClip({ api, event, reply }) {
 
 export default {
     name: "ونبيس",
-    author: "Kaguya Project",
+    author: "Shadow Garden Project",
     role: "member",
     description: "مقطع فيديو صغير لكل شخصية من شخصيات ون بيس",
     execute: sendCharacterList,

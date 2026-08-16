@@ -1,6 +1,6 @@
 class antiboxname {
   name = "حماية_الإسم";
-  author = "Kaguya Project";
+  author = "Shadow Garden Project";
   cooldowns = 60;
   description = "حماية المجموعة من تغيير إسمها!";
   role = "admin";

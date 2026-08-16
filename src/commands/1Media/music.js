@@ -4,7 +4,7 @@ import fs from "fs-extra";
 
 export default {
   name: "تخيلي2",
-  author: "مشروع كاغويا",
+  author: "مشروع شادو",
   role: "member",
   description: "توليد صورة بناءً على النص المدخل.",
 

@@ -37,7 +37,7 @@ const animeImageLinks = [
 
 export default {
   name: "أزياء",
-  author: "Kaguya Project",
+  author: "Shadow Garden Project",
   role: "member",
   aliases:["كوسبلاي"],
   description: "يقوم بعرض صورة عشوائية لشخصية أنمي",

@@ -1,6 +1,6 @@
 class Afk {
   name = "مشغول";
-  author = "Kaguya Project";
+  author = "Shadow Garden Project";
   cooldowns = 10;
   description = "قم بضبط وضع مشغول في حالة تم عمل منشن لك البوت سيخبرك";
   role = "member";

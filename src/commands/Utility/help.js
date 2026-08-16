@@ -5,48 +5,29 @@ import path from 'path';
 class Help {
   constructor() {
     this.name = "اوامر";
-    this.author = "Kaguya Project";
-    this.cooldowns = 60;
-    this.description = "عرض قائمة الأوامر مع كيفية استعمال كل واحد!";
+    this.author = "محمد الشاوني";
+    this.cooldowns = 5;
+    this.description = "عرض قائمة عمليات حديقة الظل (Shadow Garden).";
     this.role = "member";
-    this.aliases = ["أوامر", "الاوامر"];
+    this.aliases = ["أوامر", "الاوامر", "مساعدة", "help"];
     this.commands = global.client.commands;
-    this.cache = {}; // Cache to store image paths
     this.tempFolder = path.join(process.cwd(), 'temp');
     
-    // مصفوفة الصور العشوائية للعرض الأولي
-    this.randomImageUrls = [
-            "https://i.imgur.com/mCpWvaI.jpeg",
-      "https://i.imgur.com/Q8Ljscl.jpeg",
-      "https://i.imgur.com/ZGfBNLX.jpeg",
-      "https://i.imgur.com/UV1zAwh.jpeg",
-      "https://i.imgur.com/MKoNjNT.jpeg",
-      "https://i.imgur.com/ICzZ9l6.jpeg",
-      "https://i.imgur.com/wdWjH1D.jpeg",
-      "https://i.imgur.com/H2rhsH5.jpeg",
-      "https://i.imgur.com/GE7w5nt.jpeg",
-      "https://i.imgur.com/UEg87Rw.png",
-      "https://i.imgur.com/q9myIow.jpeg",
-      "https://i.imgur.com/k1Bhji6.jpeg",
-      "https://i.imgur.com/6DT6OrG.jpeg",
-      "https://i.imgur.com/dRMPS2V.jpeg"
-    ];
-
-    // مصفوفة الصور المخصصة للرد عند جلب معلومات أمر معين
-    this.detailedImageUrls = [
-    "https://i.postimg.cc/jj25dynJ/thumb-350-1080006.webp",
-    "https://i.postimg.cc/d32QSBpg/thumb-350-1239849.webp",
-    "https://i.imgur.com/VZKKBHv.jpeg",
-    "https://i.imgur.com/fX5iiTb.png" // قم بتعديل الرابط حسب الحاجة
+    // صور حديقة الظل (Shadow Garden)
+    this.shadowImages = [
+      "https://i.postimg.cc/jj25dynJ/thumb-350-1080006.webp",
+      "https://i.postimg.cc/d32QSBpg/thumb-350-1239849.webp",
+      "https://i.imgur.com/VZKKBHv.jpeg",
+      "https://i.imgur.com/fX5iiTb.png"
     ];
   }
 
   async execute({ api, event, args }) {
-    api.setMessageReaction("📝", event.messageID, (err) => {}, true);
+    api.setMessageReaction("🌑", event.messageID, (err) => {}, true);
 
     const [pageStr] = args;
     const page = parseInt(pageStr) || 1;
-    const commandsPerPage = 10; // تعديل عدد الأوامر في كل صفحة
+    const commandsPerPage = 12;
     const startIndex = (page - 1) * commandsPerPage;
     const endIndex = page * commandsPerPage;
 
@@ -55,39 +36,41 @@ class Help {
     const totalCommands = commandList.length;
 
     if (pageStr && typeof pageStr === 'string' && pageStr.toLowerCase() === 'الكل') {
-      let allCommandsMsg = "╭───────────────◊\n•——[قِـٰٚـِْ✮ِـٰٚـِْآئمِـٰٚـِْ✮ِـٰٚـِْة جِـٰٚـِْ✮ِـٰٚـِْمِـٰٚـِْ✮ِـٰٚـِْيِـٰٚـِْ✮ِـٰٚـِْعِـٰٚـِْ✮ِـٰٚـِْ آلِـٰٚـِْ✮ِـٰٚـِْأﯛ̲୭آمِـٰٚـِْ✮ِـٰٚـِْر║]——•\n";
+      let allCommandsMsg = "🌑 **عمليات حديقة الظل الكاملة** 🌑\n";
+      allCommandsMsg += "━━━━━━━━━━━━━━━━━━\n";
       
-      
-      
-      commandList.forEach((command, index) => {
-        const commandName = command.name.toLowerCase();
-        allCommandsMsg += `❏ الإسم : 『${commandName}』\n`;
+      commandList.forEach((command) => {
+        allCommandsMsg += `⚔️ 『${command.name}』\n`;
       });
-      allCommandsMsg +=`إجِٰـِۢمِٰـِۢآلِٰـِۢيِٰـِۢ عِٰـِۢدد آلِٰـِۢأﯛ̲୭آمِٰـِۢر : ${totalCommands} أمر\n╰───────────────◊`;
+      allCommandsMsg += `━━━━━━━━━━━━━━━━━━\n📊 إجمالي العمليات: ${totalCommands}\n⚡ I am Atomic.`;
       await api.sendMessage(allCommandsMsg, event.threadID);
     } else if (!isNaN(page) && page > 0 && page <= totalPages) {
-      let msg = `\n•—[قٰཻــ͒͜ـًائمـٰة أوُامـٰࢪ ڪاغــِْــٰوُيا ]—•\n`;
+      let msg = `🌑 **مخطوطة عمليات شادو (Shadow)** 🌑\n`;
+      msg += "━━━━━━━━━━━━━━━━━━\n";
 
       const commandsToDisplay = commandList.slice(startIndex, endIndex);
       commandsToDisplay.forEach((command, index) => {
-        const commandNumber = startIndex + index + 1;
-        msg += `[${commandNumber}] ⟻『${command.name}』\n`;
+        const num = startIndex + index + 1;
+        msg += `[${num}] ⮕ 『${command.name}』\n`;
       });
 
-      msg +=`✎﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏✎\nاٰلـٰ̲ـہصـٰ̲ـہفـٰ̲ـہحـٰ̲ـة : ${page}/${totalPages}:\nإجِٰـِۢمِٰـِۢآلِٰـِۢيِٰـِۢ عِٰـِۢدد آلِٰـِۢأﯛ̲୭آمِٰـِۢر : ${totalCommands} أمر\n🔖 | قم بكتابة أوامر 'رقم الصفحة' من أجل رؤية باقي الصفحات \n 🧿 | أو قم بكتابة اوامر الكل من أجل رؤية جميع الأوامر\n 📜 | رد بـ رقم الأمر من أجل مزيد من التفاصيل`;
+      msg += `━━━━━━━━━━━━━━━━━━\n`;
+      msg += `📜 الصفحة: ${page}/${totalPages}\n`;
+      msg += `📊 العمليات المكتشفة: ${totalCommands}\n`;
+      msg += `💡 رد برقم العملية لكشف تفاصيلها أو اكتب 'اوامر الكل'.\n`;
+      msg += `⚡ *I am the one who hunts in the shadows.*`;
 
-
-      const randomImageUrl = this.randomImageUrls[Math.floor(Math.random() * this.randomImageUrls.length)];
-      const tempImagePath = path.join(this.tempFolder, `random_image_${Date.now()}.jpeg`);
+      const randomImg = this.shadowImages[Math.floor(Math.random() * this.shadowImages.length)];
+      const tempPath = path.join(this.tempFolder, `shadow_help_${Date.now()}.jpg`);
 
       try {
-        const imageResponse = await axios.get(randomImageUrl, { responseType: 'arraybuffer' });
-        fs.writeFileSync(tempImagePath, Buffer.from(imageResponse.data));
-        const attachment = fs.createReadStream(tempImagePath);
+        if (!fs.existsSync(this.tempFolder)) fs.mkdirSync(this.tempFolder);
+        const res = await axios.get(randomImg, { responseType: 'arraybuffer' });
+        fs.writeFileSync(tempPath, Buffer.from(res.data));
+        const attachment = fs.createReadStream(tempPath);
         
         const info = await api.sendMessage({ body: msg, attachment }, event.threadID);
         
-        // Add onReply handler
         global.client.handler.reply.set(info.messageID, {
           author: event.senderID,
           type: "pick",
@@ -95,58 +78,53 @@ class Help {
           unsend: false,
         });
       } catch (error) {
-        console.error("حدث خطأ: ", error);
-        await api.sendMessage("❌ | حدث خطأ أثناء جلب الصورة.", event.threadID);
+        await api.sendMessage(msg, event.threadID);
       }
     } else {
-      await api.sendMessage("❌ | الصفحة غير موجودة.", event.threadID);
+      await api.sendMessage("❌ | الصفحة غير موجودة في سجلات الحديقة.", event.threadID);
     }
   }
 
   async onReply({ api, event, reply }) {
     if (reply.type === "pick" && reply.name === "اوامر" && reply.author === event.senderID) {
-      const commandNumber = parseInt(event.body.trim());
-
-      if (isNaN(commandNumber) || commandNumber < 1 || commandNumber > this.commands.size) {
-        return api.sendMessage("❌ | رقم الأمر غير صحيح.", event.threadID);
-      }
-      
-
+      const num = parseInt(event.body.trim());
       const commandList = Array.from(this.commands.values());
-      const selectedCommand = commandList[commandNumber - 1];
 
-      const roleText = this.getRoleText(selectedCommand.role);
+      if (isNaN(num) || num < 1 || num > commandList.length) {
+        return api.sendMessage("❌ | رقم العملية غير صالح.", event.threadID);
+      }
+
+      const cmd = commandList[num - 1];
+      const roleText = this.getRoleText(cmd.role);
       
-        api.setMessageReaction("🎯", event.messageID, (err) => {}, true);
+      api.setMessageReaction("⚡", event.messageID, (err) => {}, true);
   
-      const message = `\n\n\n⎔━〚〘${selectedCommand.name}〙〛━⎔\n
-👤 | ➭ المؤلف:『${selectedCommand.author}』
-🔑 | ➭ الدور:『${roleText}』
-📋 | ➭ الوصف:『${selectedCommand.description}』
-📝 | ➭ اسماء بديلة:『${selectedCommand.aliases?.join(", ") || "غير متوفرة"}』\n⎔━〚〘${selectedCommand.name}〙〛━⎔`;
-      const detailedImageUrl = this.detailedImageUrls[Math.floor(Math.random() * this.detailedImageUrls.length)];
-      const tempImagePath = path.join(this.tempFolder, `detailed_image_${Date.now()}.jpeg`);
+      const message = `🌑 **تفاصيل عملية الظل: ${cmd.name}** 🌑\n` +
+                      `━━━━━━━━━━━━━━━━━━\n` +
+                      `👤 المطور: ${cmd.author || "محمد الشاوني"}\n` +
+                      `🔑 الصلاحية: ${roleText}\n` +
+                      `📋 الوصف: ${cmd.description || "لا يوجد وصف"}\n` +
+                      `📝 الأسماء البديلة: ${cmd.aliases?.join(", ") || "لا يوجد"}\n` +
+                      `━━━━━━━━━━━━━━━━━━\n` +
+                      `⚡ *Shadow Garden Intelligence*`;
 
+      const randomImg = this.shadowImages[Math.floor(Math.random() * this.shadowImages.length)];
       try {
-        const imageResponse = await axios.get(detailedImageUrl, { responseType: 'arraybuffer' });
-        fs.writeFileSync(tempImagePath, Buffer.from(imageResponse.data));
-        const attachment = fs.createReadStream(tempImagePath);
-        await api.sendMessage({ body: message, attachment }, event.threadID);
+        const res = await axios.get(randomImg, { responseType: 'arraybuffer' });
+        const tempPath = path.join(this.tempFolder, `shadow_detail_${Date.now()}.jpg`);
+        fs.writeFileSync(tempPath, Buffer.from(res.data));
+        await api.sendMessage({ body: message, attachment: fs.createReadStream(tempPath) }, event.threadID);
       } catch (error) {
-        console.error("حدث خطأ: ", error);
-        await api.sendMessage("❌ | حدث خطأ أثناء جلب الصورة.", event.threadID);
+        await api.sendMessage(message, event.threadID);
       }
     }
   }
 
   getRoleText(role) {
     switch (role) {
-      case "admin":
-        return "المشرفين";
-      case "owner":
-        return "المالك";
-      default:
-        return "الجميع";
+      case "admin": return "كبار أعضاء الحديقة";
+      case "owner": return "سيد الظل (المالك)";
+      default: return "عامة أعضاء الحديقة";
     }
   }
 }

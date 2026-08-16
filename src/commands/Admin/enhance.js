@@ -5,7 +5,7 @@ import tinyurl from 'tinyurl';
 
 export default {
   name: "جودة",
-  author: "Kaguya Project",
+  author: "Shadow Garden Project",
   role: "member",
   description: "يقوم بتحسين الصور باستخدام API خارجية.",
   aliases:["4k"],

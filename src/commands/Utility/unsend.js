@@ -1,6 +1,6 @@
 export default {
   name: "مسح",
-  author: "Kaguya Project",
+  author: "Shadow Garden Project",
   cooldowns: 10,
   description: "مسح رسائل ال",
   role: "member",

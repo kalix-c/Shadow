@@ -1,6 +1,6 @@
 class JackpotGame {
   name = "سلوت";
-  author = "Kaguya Project";
+  author = "Shadow Garden Project";
   cooldowns = 10;
   description = "مغامرة رهانات فاكهية مع فرص الفوز بالجائزة الكبرى !";
   role = "member";

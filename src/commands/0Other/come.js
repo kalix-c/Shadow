@@ -25,7 +25,7 @@ const generateImage = async (userOneId, userTwoId) => {
 
 export default {
     name: "تعالي",
-    author: "Kaguya Project",
+    author: "Shadow Garden Project",
     role: "member",
     description: "Generates an image based on user mentions or replies.",
     execute: async function ({ api, event, args }) {

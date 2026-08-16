@@ -2,7 +2,7 @@ import path from 'path';
 
 export default {
   name: "زخرفة2",
-  author: "Kaguya Project",
+  author: "Shadow Garden Project",
   role: "member",
   cooldowns: 10,
   description: "زخرفة نصوص إنجليزي إلى حروف أشبه بالرموز!",

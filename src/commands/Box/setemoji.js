@@ -3,7 +3,7 @@ const emojiJSON = JSON.parse(fs.readFileSync("./cache12/emoji/emoji.json", "utf-
 
 class setimg {
   name = "ضبط_إيموجي";
-  author = "Kaguya Project";
+  author = "Shadow Garden Project";
   cooldowns = 60;
   descriptions = "تغيير إيموجي المجموعة";
   role = "admin";

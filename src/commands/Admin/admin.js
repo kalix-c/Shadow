@@ -2,7 +2,7 @@ import fs from "fs";
 
 class Admin {
   name = "آدمن";
-  author = "Kaguya Project";
+  author = "Shadow Garden Project";
   cooldowns = 60;
   description = "إضافة أو إزالة أو تعيين رتبة المسؤول";
   role = "admin";

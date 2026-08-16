@@ -1,6 +1,6 @@
 export default {
     name: "قبح",
-    author: "Kaguya Project",
+    author: "Shadow Garden Project",
     role: "member",
     description: "يقوم بحساب نسبة قبحك",
     execute:

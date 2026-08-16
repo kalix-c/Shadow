@@ -11517,7 +11517,7 @@ const animeImageLinks = [
 
 export default {
   name: "فتيات",
-  author: "Kaguya Project",
+  author: "Shadow Garden Project",
   role: "member",
   description: "يقوم بعرض صورة عشوائية لصور فتيات",
   async execute({ api, event, Economy }) {

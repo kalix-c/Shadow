@@ -34,7 +34,7 @@ async function getMessageCount(api, threadId, userID) {
 
 export default {
   name: "معلوماتي",
-  author: "Kaguya Project",
+  author: "Shadow Garden Project",
   role: "member",
   aliases: ["ايدي"],
   description: "جلب معلومات العضو.",

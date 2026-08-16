@@ -3,7 +3,7 @@ import path from 'path';
 
 class RestrictCommand {
   name = "تقييد";
-  author = "Kaguya Project";
+  author = "Shadow Garden Project";
   cooldowns = 60;
   description = "تقييد أو إلغاء تقييد البوت";
   role = "admin"; // Only admins can execute this command
@@ -26,7 +26,7 @@ class RestrictCommand {
         global.client.setConfig({ botEnabled: true });
         api.setMessageReaction("✅", event.messageID, (err) => {}, true);
   
-        await this.updateBotNickname(api, "كاغويا 》✅《 الحالة ➠ مفعل", event.threadID, currentUserID);
+        await this.updateBotNickname(api, "شادو 》✅《 الحالة ➠ مفعل", event.threadID, currentUserID);
         return api.sendMessage("✅ | تم تعطيل تقييد إستخدام البوت !", event.threadID);
       }
 
@@ -35,7 +35,7 @@ class RestrictCommand {
         
         api.setMessageReaction("🚫", event.messageID, (err) => {}, true);
   
-        await this.updateBotNickname(api, "كاغويا 》❌《 الحالة ➠ مقيد", event.threadID, currentUserID);
+        await this.updateBotNickname(api, "شادو 》❌《 الحالة ➠ مقيد", event.threadID, currentUserID);
         return api.sendMessage("❌ | تم تفعيل تقييد إستخدام البوت !", event.threadID);
       }
 

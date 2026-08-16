@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export default {
   name: "شات",
-  author: "Kaguya Project",
+  author: "Shadow Garden Project",
   role: "member",
   description: "يدردش معك ويرد برسالة فقط.",
   aliases: ["سيم"],

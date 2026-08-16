@@ -13,7 +13,7 @@ async function translateToArabic(text) {
 
 export default {
   name: "الطقس",
-  author: "Kaguya Project",
+  author: "Shadow Garden Project",
   role: "member",
   description: "الحصول على تقرير الطقس لموقع معين.",
   async execute({ api, event, args }) {

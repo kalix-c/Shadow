@@ -35,7 +35,7 @@ const animeImageLinks = [
 
 export default {
   name: "نيزكو",
-  author: "Kaguya Project",
+  author: "Shadow Garden Project",
   role: "member",
   description: "يقوم بعرض صور عشوائية لشخصية الأنمي نيزكو مقابل 100 دولار",
   async execute({ api, event, Economy }) {

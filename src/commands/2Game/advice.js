@@ -39,6 +39,6 @@ export default {
     name: "نصيحة",
     author: "حسين يعقوبي",
     role: "member",
-    description: "تعكيك كاغويا نصيحة ",
+    description: "تعكيك شادو نصيحة ",
     execute: executeCommand
 };

@@ -10,7 +10,7 @@ if (!fs.existsSync(userDataFile)) {
 
 export default {
    name: "ترتيب",
-   author: "Kaguya Project",
+   author: "Shadow Garden Project",
    role: "member",
    description: "تحدي ترتيب الكلمات",
    execute: async function ({ api, event }) {

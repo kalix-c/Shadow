@@ -1,6 +1,6 @@
 export default {
   name: "مجهول",
-  author: "Kaguya Project",
+  author: "Shadow Garden Project",
   role: "owner",
   description: "يرسل رسالة بشكل مجهول إلى صندوق الرسائل المحدد.",
 

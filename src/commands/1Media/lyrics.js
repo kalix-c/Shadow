@@ -4,7 +4,7 @@ import path from "path";
 
 export default {
   name: "كلمات",
-  author: "Kaguya Project",
+  author: "Shadow Garden Project",
   description: "يجلب كلمات الأغنية مع الفنان",
   role: "member",
   execute: async ({ event, api }) => {

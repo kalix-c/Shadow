@@ -1,6 +1,6 @@
 class Kick {
   name = "طرد";
-  author = "Kaguya Project";
+  author = "Shadow Garden Project";
   cooldowns = 60;
   description = "قم بطرد الأعضاء المحددين من المجموعة";
   role = "admin";

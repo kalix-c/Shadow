@@ -49,7 +49,7 @@ const animeImageLinks = [
 ];
 export default {
   name: "هيناتا",
-  author: "Kaguya Project",
+  author: "Shadow Garden Project",
   role: "member",
   description: "يقوم بعرض صور عشوائية لشخصية الأنمي هيناتا مقابل 100 دولار",
   async execute({ api, event, Economy }) {

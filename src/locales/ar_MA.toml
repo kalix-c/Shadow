@@ -1,43 +1,42 @@
-# Bot Information
+# معلومات البوت
 [info]
-name = "كاغويا البوت"
-version = "البوت هو حاليا في أصدار : $1"
-author = "حسين يعقوبي"
-title_process = "كاغويا البوت - $1:$2:$3"
+name = "⚡ شادو بوت ⚡"
+version = "إصدار الحديقة الحالي: $1"
+author = "محمد الشاوني"
+title_process = "Shadow Bot - $1:$2:$3"
 
-# Index
+# الفهرس
 [index]
-host = "الاستماع على الميناء : $1"
-invalid_credentials = "يرجى الذهاب إلى setup/credentials.json ملف واملأ fbstate!"
-exists_credentials = "تم ايجاد credentials.json file -> جاري المضي قدما في تسجيل الدخول!..."
-login_success = "تم الدخول بنجاح !"
-login_error = "فشل الدخول !"
-listen = "الاستماع حاليا للأحداث الجديدة !"
-update = "البوت حاليا لديه إصدار جديد $1 -> $2! المرجو تحديثه على آخر إصدار : https://github.com/ttkienn/kaguya-project"
-refresh_mqtt = "Refreshing MQTT in progress!"
-refresh_mqtt_success = "MQTT refresh successful!"
+host = "الظلال تراقب المنفذ: $1"
+invalid_credentials = "خطأ: ملف حالة الظل (KaguyaState.json) مفقود أو غير صالح!"
+exists_credentials = "تم العثور على ملف الحالة -> جاري التغلغل في النظام..."
+login_success = "تم التغلغل بنجاح! سيد الظل متصل."
+login_error = "فشل التغلغل! تأكد من ملف الحالة."
+listen = "الحديقة تستمع الآن للأحداث والهمسات..."
+update = "هناك قوة جديدة متاحة (تحديث) $1 -> $2!"
+refresh_mqtt = "جاري تجديد طاقة الظل (MQTT)..."
+refresh_mqtt_success = "تم تجديد الطاقة بنجاح!"
 
-# Database
+# قاعدة البيانات
 [database]
-type = "You have chosen the database type as: $1"
-connection_success = "Connected to the database successfully!"
-connection_failed = "Unable to connect to the database!"
-create_user = "Successfully created data for the user: $1"
-create_thread = "Successfully created data for the group: $1"
+type = "نوع مستودع البيانات المختار: $1"
+connection_success = "تم الاتصال بقاعدة بيانات الحديقة بنجاح!"
+connection_failed = "فشل الوصول إلى قاعدة البيانات السرية!"
+create_user = "تم تسجيل عضو جديد في الحديقة: $1"
+create_thread = "تم رصد قلعة جديدة (مجموعة): $1"
 
-# Handler
+# المعالج (Handler)
 [handler]
-command_load = " ✅ |تم تحميل الأمر بنجاح : $1"
-command_load_error = " ❌ |غير قادر على تحميل الأمر : $1 يتعلق ذالك بالخطأ : $2"
-event_load = " ✅ | تم تحميل بنجاح : $1 من الأوامر"
-event_load_error = " ❌ | فشل تحميل الإيفنتز : $1 يتعلق الأمر بالخطأ : $2"
-command_noPermission = " ⚠️ | ليس لديك الصلاحية لإستخدام هذا الأمر ❗"
-command_cooldowns = " ⏱️ | أنت تحتاح تنتظر $1 ثانية لتستخدمه مجددا !"
-command_aliases_exists = " ⚠️ | ميزة الألقاب $1 هي بالفعل مستخدمة بالنسبة للأمر $2 ، لذالك لا يمكن تحميل الأمر $3!"
-error = " ❌ |حدث خطأ : $1"
-thread_ban = " ❌ | مجموعتكم تم حظرها من إستخدام كاغويا البوت والسبب : $1"
-user_ban = "❌ | تم حظرك من إستخدام كاغويا البوت مع السبب : $1"
+command_load = " ✅ | برزت القوة: $1"
+command_load_error = " ❌ | فشل استدعاء القوة: $1 | الخطأ: $2"
+event_load = " ✅ | تم تفعيل $1 من أحداث الحديقة"
+event_load_error = " ❌ | فشل تفعيل الأحداث: $1 | الخطأ: $2"
+command_noPermission = " 🚫 | لا تملك الهيبة الكافية لاستخدام هذه القوة!"
+command_cooldowns = " ⏱️ | تمهل... تحتاج الظلال لـ $1 ثانية لتتجمع مجدداً."
+error = " ❌ | اضطراب في قوة الظل: $1"
+thread_ban = " 🌑 | تم نفي هذه القلعة من الحديقة. السبب: $1"
+user_ban = "🌑 | لقد تم نفيُك من الحديقة بقرار من سيد الظل. السبب: $1"
 command_not_found = ''
 
-# plugins -> example plugins help.js
+# الإضافات
 [plugins]

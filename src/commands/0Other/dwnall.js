@@ -4,7 +4,7 @@ import path from "path";
 
 export default {
   name: "فيسبوك",
-  author: "Kaguya Project",
+  author: "Shadow Garden Project",
   role: "member",
   description: "تنزيل مقطع فيديو من Facebook.",
   execute: async function({ api, event, args }) {

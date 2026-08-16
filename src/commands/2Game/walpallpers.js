@@ -6,7 +6,7 @@ const animeImageLinks = [];
 
 export default {
   name: "خلفيات",
-  author: "Kaguya Project",
+  author: "Shadow Garden Project",
   role: "member",
   description: "يقوم بعرض صورة عشوائية لخلفيات ذات جودة عالية",
   async execute({ api, event }) {

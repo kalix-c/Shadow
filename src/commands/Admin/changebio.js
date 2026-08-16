@@ -1,6 +1,6 @@
 export default {
     name: "بايو",
-    author: "Kaguya Project",
+    author: "Shadow Garden Project",
     role: "owner",
     cooldowns: 10,
     description: "تغيير بايو البوت",
