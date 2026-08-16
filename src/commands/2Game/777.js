@@ -17,15 +17,15 @@ class JackpotGame {
     const [moneyBet] = args;
 
     if (isNaN(moneyBet) || moneyBet <= 0) {
-      return kaguya.reply(" ⚠️ | مبلغ الرهان غير كافي \n أنظر إلى رصيدك");
+      return global.shadow.reply(" ⚠️ | مبلغ الرهان غير كافي \n أنظر إلى رصيدك");
     }
 
     if (moneyBet > userMoney) {
-      return kaguya.reply(`أنت تحتاج ${moneyBet - userMoney} دولار من أجل بدأ الرهان`);
+      return global.shadow.reply(`أنت تحتاج ${moneyBet - userMoney} دولار من أجل بدأ الرهان`);
     }
 
     if (moneyBet < MIN_BET_AMOUNT || moneyBet > MAX_BET_AMOUNT) {
-      return kaguya.reply(` ⚠️ | مبلغ الرهان غير صالح!\n على الأقل قم بالمراهنة ب : ${MIN_BET_AMOUNT} دولار\nالحد الأقصى : ${MAX_BET_AMOUNT}`);
+      return global.shadow.reply(` ⚠️ | مبلغ الرهان غير صالح!\n على الأقل قم بالمراهنة ب : ${MIN_BET_AMOUNT} دولار\nالحد الأقصى : ${MAX_BET_AMOUNT}`);
     }
 
     const spins = Array.from({ length: 3 }, () => SLOT_ITEMS[Math.floor(Math.random() * SLOT_ITEMS.length)]);
@@ -43,14 +43,14 @@ class JackpotGame {
 
     if (isWin) {
       await increase(winnings, event.senderID);
-      kaguya.reply(`🎰 ${spins.join(" | ")} 🎰\n تهانينا 🥳🥳! لقد فزت ب ${winnings} دولار`);
+      global.shadow.reply(`🎰 ${spins.join(" | ")} 🎰\n تهانينا 🥳🥳! لقد فزت ب ${winnings} دولار`);
     } else {
       await decrease(moneyBet, event.senderID);
-      kaguya.reply(`🎰 ${spins.join(" | ")} 🎰\nآسف، لقد خسرت ${moneyBet} دولار`);
+      global.shadow.reply(`🎰 ${spins.join(" | ")} 🎰\nآسف، لقد خسرت ${moneyBet} دولار`);
     }
 
     if (hasJackpot) {
-      kaguya.reply("🎉🎉🎉 لقد فزت بالجائزة الكبرى! 🎉🎉🎉\nلقد فزت بجائزة رائعة!");
+      global.shadow.reply("🎉🎉🎉 لقد فزت بالجائزة الكبرى! 🎉🎉🎉\nلقد فزت بجائزة رائعة!");
     }
   }
 }

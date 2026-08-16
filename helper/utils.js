@@ -1,5 +1,5 @@
-import axios from "axios";
 import fs from "fs-extra";
+import { getWithRetry } from "../src/utils/http.js";
 
 export default function ({ api, event }) {
   const formatCurrency = (number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 9 }).format(number);
@@ -20,7 +20,7 @@ export default function ({ api, event }) {
   };
 
   const downloadFile = async (url, path) => {
-    const response = await axios.get(url, { responseType: "stream" });
+    const response = await getWithRetry(url, { responseType: "stream" }, 1);
 
     return new Promise((resolve, reject) => {
       const fileStream = fs.createWriteStream(path);
@@ -40,7 +40,11 @@ export default function ({ api, event }) {
 
   const detectText = async (text) => {
     try {
-      const response = await axios.get(`https://api.microsofttranslator.com/V2/Http.svc/Detect?&appid=68D088969D79A8B23AF8585CC83EBA2A05A97651&text=${text}`);
+      const response = await getWithRetry(
+        `https://api.microsofttranslator.com/V2/Http.svc/Detect?&appid=68D088969D79A8B23AF8585CC83EBA2A05A97651&text=${encodeURIComponent(text)}`,
+        { timeout: 15_000 },
+        1,
+      );
       return />(.*?)</.exec(response.data)[1];
     } catch (error) {
       throw error;
@@ -49,7 +53,7 @@ export default function ({ api, event }) {
 
   const findUID = async (vanity) => {
     try {
-      const response = await axios.get(`https://www.facebook.com/${vanity}`, {
+      const response = await getWithRetry(`https://www.facebook.com/${vanity}`, {
         headers: {
           authority: "www.facebook.com",
           accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",

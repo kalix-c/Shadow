@@ -30,7 +30,7 @@ async function restart(event, api) {
 export default {
   name: "رست",
   version: "1.0.0",
-  author: "kaguya project",
+  author: "محمد الشاوني",
   description: "إعادة تشغيل البوت",
   role: "admin",
   cooldowns: 5,

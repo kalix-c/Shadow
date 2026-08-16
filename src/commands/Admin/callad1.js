@@ -3,7 +3,7 @@ import moment from 'moment-timezone';
 export default {
   name: "تقرير",
   version: "1.0.0",
-  author: "kaguya project",
+  author: "محمد الشاوني",
   description: "إرسال تقرير إلى المطور",
   role: "member",
   cooldowns: 5,

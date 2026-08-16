@@ -59,7 +59,7 @@ async function imageSearch({ api, event, args }) {
 
 export default {
     name: "تشابه",
-    author: "kaguya project",
+    author: "محمد الشاوني",
     description: "يقوم بالبحث عن معلومات حول الصورة المرسلة أو رابط الصورة.",
     role: "member",
     execute: imageSearch

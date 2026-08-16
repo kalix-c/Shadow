@@ -11,7 +11,7 @@ class AutoSeen {
   }
   async execute() {
     this.config = this.config ? false : true;
-    return kaguya.reply(`${this.config ? "✅" : "❌"} `);
+    return global.shadow.reply(`${this.config ? "✅" : "❌"} `);
   }
 }
 

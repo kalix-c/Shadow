@@ -4,7 +4,7 @@ let lastExecutionDate = {}; // جدول لتخزين تاريخ آخر تنفي�
 
 export default {
   name: "عمل",
-  author: "kaguya project",
+  author: "محمد الشاوني",
   cooldowns: 3600, // فترة التبريد تعادل ساعة واحدة بالثواني
   description: "قم بإجراء عمل واحصل على مكافأة!",
   role: "member",

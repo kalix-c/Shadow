@@ -19,7 +19,7 @@ async function bal(one, two) {
 
 export default {
     name: "تحدي",
-    author: "kaguya project",
+    author: "محمد الشاوني",
     description: "تحدى شخصا ما",
     role: "member",
     execute: async ({ api, event, args }) => {

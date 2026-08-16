@@ -1,6 +1,6 @@
 export default {
   name: "تعالو",
-  author: "kaguya project",
+  author: "محمد الشاوني",
   role: "member",
   description:"يقوم بمنشن للجميع اعضاء المجموعة",
   execute: ({ api, event }) => {

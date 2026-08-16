@@ -36,7 +36,7 @@ async function iphoneAlert({ api, event, args }) {
 
 export default {
   name: "آيفون",
-  auther:"kaguya project",
+  auther:"محمد الشاوني",
   description: "يرسل تنبيه iPhone بالرسالة المقدمة.",
   execute: iphoneAlert
 };

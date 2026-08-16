@@ -5,7 +5,7 @@ const userDataFile = path.join(process.cwd(), 'pontsData.json');
 
 export default {
     name: "توب",
-    author: "kaguya project",
+    author: "محمد الشاوني",
     role: "member",
     description: "اعلام بأعلى المتصدرين في قائمة النقاط.",
     execute: async function ({ api, event }) {

@@ -1,16 +1,13 @@
 import fs from "node:fs";
 import login from "@trunqkj3n/kaguya";
 import { listen } from "./src/listen/listen.js";
-import './src/utils/kaguya.js';
 import { commandMiddleware, eventMiddleware } from "./src/middleware/index.js";
 import sleep from "time-sleep";
 import { log, notifer } from "./src/logger/index.js";
 import gradient from "gradient-string";
 import chokidar from "chokidar";
-import config from "./KaguyaSetUp/config.js";
+import config from "./ShadowSetUp/config.js";
 import EventEmitter from "events";
-import axios from "axios";
-import semver from "semver";
 
 class Shadow extends EventEmitter {
   constructor() {
@@ -29,8 +26,8 @@ class Shadow extends EventEmitter {
       process.exit(1);
     });
     this.currentConfig = config;
-    this.watcher = chokidar.watch("./KaguyaSetUp/config.js");
-    this.statePath = "./KaguyaSetUp/KaguyaState.json";
+    this.watcher = chokidar.watch("./ShadowSetUp/config.js");
+    this.statePath = "./ShadowSetUp/ShadowState.json";
     this.package = JSON.parse(fs.readFileSync("./package.json"));
     this.setupEventListeners();
   }
@@ -38,7 +35,7 @@ class Shadow extends EventEmitter {
   setupEventListeners() {
     this.watcher.on("change", async () => {
       try {
-        const updatedConfig = await import("./KaguyaSetUp/config.js?update=" + Date.now());
+        const updatedConfig = await import("./ShadowSetUp/config.js?update=" + Date.now());
         this.currentConfig = updatedConfig.default;
         global.client.config = this.currentConfig;
         log([{ message: "[ SYSTEM ]: ", color: "green" }, { message: "Shadow configuration updated.", color: "white" }]);

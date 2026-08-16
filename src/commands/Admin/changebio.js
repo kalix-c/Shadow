@@ -8,7 +8,7 @@ export default {
       try {
         var content = args.join(" ") || "";
         await api.changeBio(content);
-        return kaguya.reply(` ✅ |تم تغيير بايو البوت إلى : ${content} بنجاح`)
+        return global.shadow.reply(` ✅ |تم تغيير بايو البوت إلى : ${content} بنجاح`)
       } catch (err) {
         console.error(err);
       }

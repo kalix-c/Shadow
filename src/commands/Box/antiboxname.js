@@ -15,10 +15,10 @@ class antiboxname {
           nameBox: status,
         },
       });
-      return kaguya.reply(`تم  ${status ? "تشغيل" : "❌ إطفاء ✅"} ميزة الحماية من تغيير إسم المجموعة`);
+      return global.shadow.reply(`تم  ${status ? "تشغيل" : "❌ إطفاء ✅"} ميزة الحماية من تغيير إسم المجموعة`);
     } catch (err) {
       console.error(err);
-      return kaguya.reply(" ❌ |لقد حدث خطأ غير متوقع!");
+      return global.shadow.reply(" ❌ |لقد حدث خطأ غير متوقع!");
     }
   }
 }

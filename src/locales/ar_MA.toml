@@ -8,7 +8,7 @@ title_process = "Shadow Bot - $1:$2:$3"
 # الفهرس
 [index]
 host = "الظلال تراقب المنفذ: $1"
-invalid_credentials = "خطأ: ملف حالة الظل (KaguyaState.json) مفقود أو غير صالح!"
+invalid_credentials = "خطأ: ملف حالة الظل (ShadowState.json) مفقود أو غير صالح!"
 exists_credentials = "تم العثور على ملف الحالة -> جاري التغلغل في النظام..."
 login_success = "تم التغلغل بنجاح! سيد الظل متصل."
 login_error = "فشل التغلغل! تأكد من ملف الحالة."

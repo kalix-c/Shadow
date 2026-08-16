@@ -5,7 +5,7 @@ import { shorten } from 'tinyurl';
 
 export default {
   name: "نيجي",
-  author: "kaguya project",
+  author: "محمد الشاوني",
   role: "member",
   aliases: ["niji"],
   description: "توليد صورة أنمي بناء على النص المعطى.",

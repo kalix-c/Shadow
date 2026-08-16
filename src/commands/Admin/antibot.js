@@ -1,56 +1,80 @@
-import axios from "axios";
+import { getWithRetry } from "../../utils/http.js";
 
 export default {
   name: "كود",
-  author: "Shadow Garden Project",
+  author: "محمد الشاوني",
   role: "admin",
-  description: "Installs a new command script from a provided content or URL link.",
+  description: "تثبيت أمر جديد من محتوى مباشر أو رابط موثوق.",
 
   execute: async ({ api, event, args }) => {
-    if (args[0] === 'تثبيت') {
-      if (args.length < 3) {
-        return api.sendMessage('⚠️ | يرجى تقديم اسم الملف والمحتوى أو رابط رمز صالح.', event.threadID, event.messageID);
-      }
-
-      const fileName = args[1];
-      const content = args.slice(2).join(' ');
-
-      if (content.startsWith('http://') || content.startsWith('https://')) {
-        try {
-          const response = await axios.get(content);
-          installScript(fileName, response.data, api, event);
-        } catch (error) {
-          console.error(error);
-          api.sendMessage('❌ | فشل جلب المحتوى من الرابط المقدم.', event.threadID, event.messageID);
-        }
-      } else {
-        installScript(fileName, content, api, event);
-      }
-    } else {
-      api.sendMessage('❌ | خطأ في الإستعمال. استخدم `تثبيت` بعدها اسم الملف والرابط او المحتوى.', event.threadID, event.messageID);
+    if (args[0] !== "تثبيت") {
+      return api.sendMessage(
+        "❌ | الاستخدام الصحيح: .كود تثبيت اسم_الملف المحتوى_أو_الرابط",
+        event.threadID,
+        event.messageID,
+      );
     }
-  }
+
+    if (args.length < 3) {
+      return api.sendMessage(
+        "⚠️ | يرجى تقديم اسم الملف والمحتوى أو رابط صالح.",
+        event.threadID,
+        event.messageID,
+      );
+    }
+
+    const fileName = args[1];
+    const content = args.slice(2).join(" ");
+
+    try {
+      const sourceContent = /^https?:\/\//i.test(content)
+        ? (await getWithRetry(content, { timeout: 15_000 }, 1)).data
+        : content;
+
+      await installScript(fileName, sourceContent, api, event);
+    } catch (error) {
+      console.error("[SHADOW CODE]", error);
+      await api.sendMessage(
+        "❌ | تعذر جلب المحتوى أو تثبيت الأمر. تحقق من الرابط وإعدادات GitHub.",
+        event.threadID,
+        event.messageID,
+      );
+    }
+  },
 };
 
-function installScript(fileName, content, api, event) {
-  const owner = 'HUSSEINHN123'; 
-  const repo = 'kaguya_V3'; 
-  const token = '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';
+async function installScript(fileName, content, api, event) {
+  const owner = process.env.GITHUB_OWNER || "kalix-c";
+  const repo = process.env.GITHUB_REPO || "Shadow";
+  const token = process.env.GITHUB_TOKEN;
 
-  const directory = 'commands/Hussein';
-  const apiUrl = `https://vexx-kshitiz.vercel.app/github?owner=${owner}&repo=${repo}&token=${token}&directory=${directory}&file=${fileName}&content=${encodeURIComponent(content)}`;
+  if (!token) {
+    throw new Error("GITHUB_TOKEN is not configured");
+  }
 
-  axios.get(apiUrl)
-    .then((response) => {
-      if (response.data && response.data.success) {
-        api.sendMessage(`✅ | تم تثبيث "${fileName}" بنجاح !.`, event.threadID, event.messageID);
-      } else {
-        const errorMessage = response.data ? response.data.message : 'Unknown error';
-        api.sendMessage(`❌ | فشل تثبيت الملف "${fileName}" و السبب : ${errorMessage}`, event.threadID, event.messageID);
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-      api.sendMessage('❌ An error occurred while installing the command file.', event.threadID, event.messageID);
-    });
-      }
+  const directory = process.env.GITHUB_COMMANDS_DIR || "src/commands";
+  const apiUrl = new URL("https://vexx-kshitiz.vercel.app/github");
+  apiUrl.searchParams.set("owner", owner);
+  apiUrl.searchParams.set("repo", repo);
+  apiUrl.searchParams.set("token", token);
+  apiUrl.searchParams.set("directory", directory);
+  apiUrl.searchParams.set("file", fileName);
+  apiUrl.searchParams.set("content", content);
+
+  const response = await getWithRetry(apiUrl.toString(), { timeout: 20_000 }, 1);
+
+  if (response.data?.success) {
+    return api.sendMessage(
+      `✅ | تم تثبيت الأمر «${fileName}» بنجاح.`,
+      event.threadID,
+      event.messageID,
+    );
+  }
+
+  const errorMessage = response.data?.message || "تعذر تنفيذ عملية التثبيت.";
+  return api.sendMessage(
+    `❌ | فشل تثبيت الملف «${fileName}»: ${errorMessage}`,
+    event.threadID,
+    event.messageID,
+  );
+}

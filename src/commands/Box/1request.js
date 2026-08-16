@@ -4,7 +4,7 @@ import path from 'path'; // استيراد مكتبة path
 
 export default {
   name: "تحويل_تو_اوديو",
-  author: "kaguya project",
+  author: "محمد الشاوني",
   role: "member",
   description: "تحويل رسالة فيديو إلى ملف صوتي.",
   execute: async function ({ api, event }) {

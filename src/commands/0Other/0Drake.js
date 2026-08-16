@@ -38,7 +38,7 @@ async function drakeAlert({ api, event, args }) {
 
 export default {
   name: "درايك",
-  author: "kaguya project",
+  author: "محمد الشاوني",
   description: "يرسل ميم درايك مع جملتين مفصولتين بعلامة |.\nمثال: درايك amogus | amongus",
   execute: drakeAlert
 };

@@ -6,7 +6,7 @@ const userDataFile = path.join(process.cwd(), 'pontsData.json');
 
 export default {
     name: "صرف",
-    author: "kaguya project",
+    author: "محمد الشاوني",
     role: "member",
     description: "يتم تحويل النقاط من ملف pontsData.json إلى الرصيد بمعدل 5 دولار لكل نقطة باستخدام Economy.increase.",
     async execute({ api, event, args, Economy }) {

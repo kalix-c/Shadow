@@ -4,7 +4,7 @@ import axios from 'axios';
 
 export default {
   name: "قمامة",
-  author: "KAGUYA PROJECT",
+  author: "محمد الشاوني",
   role: "member",
   description: "تحويل صورة الملف الشخصي إلى صورة ضبابية.",
   

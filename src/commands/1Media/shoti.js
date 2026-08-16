@@ -4,7 +4,7 @@ import fs from "fs";
 
 export default {
   name: "تحميل",
-  author: "kaguya project",
+  author: "محمد الشاوني",
   role: "member",
   description: "تنزيل مقاطع الفيديو من تيك توك أو يوتيوب بناءً على الوصف.",
 

@@ -82,7 +82,7 @@ async function sendRandomAnimeClip({ api, event }) {
 
 export default {
     name: "مقطع_أنمي",
-    author: "kaguya project",
+    author: "محمد الشاوني",
     role: "member",
     description: "يقوم بإرسال مقاطع أنمي عشوائية",
     execute: sendRandomAnimeClip

@@ -13,7 +13,7 @@ class setimg {
     try {
       var [emoji] = args;
       if (!emojiJSON.includes(emoji)) {
-        return kaguya.reply(" ⚠️ |الرجاء إدخال إيموجي صالح !")
+        return global.shadow.reply(" ⚠️ |الرجاء إدخال إيموجي صالح !")
       }
       await api.changeThreadEmoji(emoji, event.threadID, event.messagaID);
     } catch (err) {

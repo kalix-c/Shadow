@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export default {
   name: "لو-خيروك",
-  author: "KAGUYA PROJECT",
+  author: "محمد الشاوني",
   role: "member",
   description: "لعبة لو خيروك بأستخدام سؤال عشوائي.",
 

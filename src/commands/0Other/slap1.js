@@ -3,7 +3,7 @@ import request from "request";
 
 export default {
   name: "اصفعي",
-  author: "kaguya project",
+  author: "محمد الشاوني",
   role: "member",
   description: "يصفع شخصًا معينًا بصورة مضحكة.",
   execute: async ({ api, event }) => {

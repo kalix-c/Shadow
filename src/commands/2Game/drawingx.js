@@ -4,7 +4,7 @@ import fs from "fs-extra";
 
 export default {
   name: "تخيلي3",
-  author: "kaguya project",
+  author: "محمد الشاوني",
   role: "member",
   description: "Generates an image from a prompt.",
   

@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export default {
   name: "ترجمة",
-  author: "kaguya project",
+  author: "محمد الشاوني",
   cooldowns: 10,
   description: "ترجمة النص من لغة إلى أخرى باستخدام خدمة Google Translate.",
   role: "member",

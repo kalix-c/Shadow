@@ -19,7 +19,7 @@ async function getUID(url, api) {
 
 export default {
   name: "ضفي",
-  author: "kaguya project",
+  author: "محمد الشاوني",
   description: "أمر لإضافة عضو إلى المجموعة",
   role: "admin",
   execute: async ({ api, event, args }) => {

@@ -31,7 +31,7 @@
 Shadow/
 ├── index.js                 # نقطة تشغيل البوت
 ├── app.js                   # خادم فحص الصحة
-├── KaguyaSetUp/config.js    # إعدادات التشغيل والبادئة
+├── ShadowSetUp/config.js    # إعدادات التشغيل والبادئة
 ├── src/
 │   ├── commands/            # الأوامر العربية
 │   ├── events/              # أحداث Messenger

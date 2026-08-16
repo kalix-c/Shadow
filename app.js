@@ -1,5 +1,5 @@
 import express from "express";
-import config from "./KaguyaSetUp/config.js";
+import config from "./ShadowSetUp/config.js";
 import { log } from "./src/logger/index.js";
 
 const app = express();

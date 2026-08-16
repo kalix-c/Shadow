@@ -2,7 +2,7 @@ import axios from "axios";
 
 export default {
   name: "ملصق",
-  author: "kaguya project",
+  author: "محمد الشاوني",
   role: "member",
   description: "الرد على الملصقات من خلال الرد عليها أو إرسال ملصق محدد.",
   execute: async function ({ api, event, args }) {

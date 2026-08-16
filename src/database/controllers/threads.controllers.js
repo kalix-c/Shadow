@@ -1,17 +1,10 @@
 import threadsModels from "../models/threads.models.js";
-import config from "../../../KaguyaSetUp/config.js";
+import config from "../../../ShadowSetUp/config.js";
 import { log } from "../../logger/index.js";
 import fs from "fs-extra";
-import chokidar from "chokidar";
-
 const filePath = "./database/threads.json";
-const watcher = chokidar.watch(filePath);
 
-var threadsJSON = JSON.parse(fs.readFileSync(filePath));
-
-watcher.on("change", () => {
-  threadsJSON = JSON.parse(fs.readFileSync(filePath));
-});
+let threadsJSON = JSON.parse(fs.readFileSync(filePath));
 
 export default function ({ api }) {
   const getThreadInfo = async (tid) => {

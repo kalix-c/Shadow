@@ -9,9 +9,9 @@ export default {
     const uid = event?.messageReply?.senderID || (Object.keys(event.mentions).length > 0 ? Object.keys(event.mentions)[0] : event.senderID);
 
     if (!uid) {
-      return kaguya.reply(" ⚠️ |يرجى عمل منشن أو الرد على رسالة الشخص الذي تحتاج إلى الحصول على آيدي منه");
+      return global.shadow.reply(" ⚠️ |يرجى عمل منشن أو الرد على رسالة الشخص الذي تحتاج إلى الحصول على آيدي منه");
     }
 
-    return kaguya.reply(uid);
+    return global.shadow.reply(uid);
   }
 };

@@ -2,7 +2,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import fs from "fs-extra";
 import { log } from "../../logger/index.js";
-import config from "../../../KaguyaSetUp/config.js";
+import config from "../../../ShadowSetUp/config.js";
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../");
 const filePath = path.join(projectRoot, "database", "users.json");

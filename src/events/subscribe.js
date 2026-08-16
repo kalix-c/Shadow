@@ -1,7 +1,4 @@
 import { log } from "../logger/index.js";
-import fs from "fs";
-import axios from "axios";
-import path from "path";
 
 export default {
   name: "subscribe",
@@ -46,18 +43,17 @@ export default {
           api.unsendMessage(event.messageID);
 
           // تغيير اسم البوت عند إضافته إلى المجموعة
-          const botName = "كاغويا"; // اسم البوت
-          api.changeNickname(
+          const botName = "⚡ 𝐒𝐇𝐀𝐃𝐎𝐖 ⚡";
+          await api.changeNickname(
             `》 《 ❃ ➠ ${botName}`,
             event.threadID,
-            api.getCurrentUserID()
+            api.getCurrentUserID(),
           );
 
-          // رسالة الترحيب
-          const welcomeMessage = `┌───── ～✿～ ─────┐\n✅ | تــم الــتــوصــيــل بـنـجـاح\n❏ الـرمـز : 『بدون رمز』\n❏ إسـم الـبـوت : 『${botName}』\n❏ الـمـطـور : 『حــســيــن يــعــقــوبــي』\n❏ رابـط الـمـطـور : https://www.facebook.com/profile.php?id=100076269693499 \n╼╾─────⊹⊱⊰⊹─────╼╾\n⚠️  | اكتب قائمة او اوامر \n╼╾─────⊹⊱⊰⊹─────╼╾\n🔖 | اكتب ضيفيني من اجل ان تدخل مجموعة البوت او تقرير \n╼╾─────⊹⊱⊰⊹─────╼╾\n〘🎀 KᗩGᑌYᗩ ᗷOT 🎀〙\n└───── ～✿～ ─────┘`;
+          // رسالة الترحيب العربية الخاصة بهوية Shadow
+          const welcomeMessage = `┌───── ～✦～ ─────┐\n🌑 | تم الارتباط بنجاح من خلف الظلال\n❏ البادئة: 『.』\n❏ اسم البوت: 『${botName}』\n❏ المطور: 『محمد الشاوني』\n❏ رابط المطور: https://www.facebook.com/profile.php?id=61584561724670\n╼╾─────⊹⊱⊰⊹─────╼╾\nاكتب .اوامر لعرض عمليات الحديقة\n╼╾─────⊹⊱⊰⊹─────╼╾\n〘🌑 SHADOW GARDEN 🌑〙\n└───── ～✦～ ─────┘`;
 
-          // إرسال رسالة الترحيب فقط بدون فيديو
-          api.sendMessage(welcomeMessage, event.threadID);
+          await api.sendMessage(welcomeMessage, event.threadID);
 
         } else {
           // إذا تم إضافة أعضاء آخرين

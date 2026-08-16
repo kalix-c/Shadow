@@ -4,7 +4,7 @@ import path from "path";
 
 export default {
   name: "لقطة",
-  author: "kaguya project",
+  author: "محمد الشاوني",
   role: "member",
   description: "التقاط لقطة شاشة من موقع ويب باستخدام URL محدد.",
   execute: async ({ api, event, args }) => {

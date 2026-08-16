@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export default {
     name: 'فاكت',
-    author: 'kaguya project',
+    author: 'محمد الشاوني',
     role: 'member',
     aliases:['كت'],
     description: 'جلب حقيقة وترجمتها إلى العربية.',

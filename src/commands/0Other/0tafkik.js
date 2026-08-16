@@ -11,7 +11,7 @@ if (!fs.existsSync(userDataFile)) {
 
 export default {
     name: "تفكيك",
-    author: "kaguya project",
+    author: "محمد الشاوني",
     role: "member",
     description: "تفكيك الكلمات والفوز بالنقاط",
     execute: async function ({ api, event, Economy }) {

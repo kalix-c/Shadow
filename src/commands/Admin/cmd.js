@@ -23,7 +23,7 @@ class CMD {
         break;
       default:
         const defaultName = `${global.client.config.prefix}${this.name}`;
-        kaguya.reply(`[ كمند ]\n\n=> تحميل <إسم الملف> (تحميل الأمر ${defaultName} تحميل_الكل كمند )\n=> تحميل جميل أوامر البوت`);
+        global.shadow.reply(`[ كمند ]\n\n=> تحميل <إسم الملف> (تحميل الأمر ${defaultName} تحميل_الكل كمند )\n=> تحميل جميل أوامر البوت`);
         break;
     }
   }
@@ -31,19 +31,19 @@ class CMD {
   async loadCommand(commandName) {
     try {
       if (!commandName) {
-        return kaguya.reply(" ⚠️ | يرحى إدخال الأمر اللذي تريد إعادة تحميله");
+        return global.shadow.reply(" ⚠️ | يرحى إدخال الأمر اللذي تريد إعادة تحميله");
       }
 
       const pluginPath = this.findCommandPath(commandName);
 
       if (!pluginPath) {
-        return kaguya.reply(" ⚠️ |لم يتم العثور على هذا الأمر!");
+        return global.shadow.reply(" ⚠️ |لم يتم العثور على هذا الأمر!");
       }
 
       const [oldPlugins, plugins] = await this.loadPlugin(pluginPath);
 
       if (!plugins?.name || typeof plugins?.execute !== "function") {
-        return kaguya.reply(` ⚠️ | هذا الأمر غير مؤهل للتحميل!`);
+        return global.shadow.reply(` ⚠️ | هذا الأمر غير مؤهل للتحميل!`);
       }
 
       if (global.client.commands.has(oldPlugins?.name)) {
@@ -52,9 +52,9 @@ class CMD {
 
       global.client.commands.set(plugins.name, plugins);
 
-      kaguya.reply(`[ كمند ]\nحالة : جيدة\nالإسم : ${plugins.name}\nالمطور : ${plugins?.author}\nالوصف : ${plugins?.description}`);
+      global.shadow.reply(`[ كمند ]\nحالة : جيدة\nالإسم : ${plugins.name}\nالمطور : ${plugins?.author}\nالوصف : ${plugins?.description}`);
     } catch (err) {
-      kaguya.reply(" ⚠️ |لا يمكن تحميل هذا الأمر!");
+      global.shadow.reply(" ⚠️ |لا يمكن تحميل هذا الأمر!");
     }
   }
 
@@ -78,9 +78,9 @@ class CMD {
         }
       }
 
-      kaguya.reply(" ✅ | تم إعادة تحميل جميع الأوامر بنجاح");
+      global.shadow.reply(" ✅ | تم إعادة تحميل جميع الأوامر بنجاح");
     } catch (err) {
-      kaguya.reply("⚠️ |غير قادرة على إعادة تحميل الأوامر بأكملها !");
+      global.shadow.reply("⚠️ |غير قادرة على إعادة تحميل الأوامر بأكملها !");
     }
   }
 

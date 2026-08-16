@@ -12,7 +12,7 @@ if (!fs.existsSync(userDataFile)) {
 
 export default {
     name: "تخمين",
-    author: "kaguya project",
+    author: "محمد الشاوني",
     role: "member",
     description: "تخمين اسم شخصيات الانمي من خلال الوصف والفوز بالنقاط",
     execute: async function ({ api, event, Economy }) {

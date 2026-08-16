@@ -37,7 +37,7 @@ async function oogwayAlert({ api, event, args }) {
 
 export default {
   name: "حكمة",
-  author: "kaguya project",
+  author: "محمد الشاوني",
   description: "يرسل صورة أوجواي مع النص المقدم.\nمثال: أوجواي الحكمة",
   aliases:["أوجواي"],
   execute: oogwayAlert

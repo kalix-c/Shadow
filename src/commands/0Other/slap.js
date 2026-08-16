@@ -1,6 +1,6 @@
 export default {
   name: "كنية",
-  author: "kaguya project",
+  author: "محمد الشاوني",
   role: 0,
   description: "يقوم هذا الأمر بتغيير اسم المستخدم المحدد في المحادثة إلى الاسم المعطى.",
 

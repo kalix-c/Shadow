@@ -1,7 +1,7 @@
 
 export default {
     name: "ضيفيني",
-    author: "kaguya project",
+    author: "محمد الشاوني",
     role: "member",
     description: "يضيف المستخدم إلى مجموعة الدعم إذا لم يكن موجودًا بالفعل.",
     async execute({ api, args, message, event }) {

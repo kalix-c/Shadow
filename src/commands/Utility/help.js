@@ -1,17 +1,10 @@
-import axios from "axios";
 import fs from "node:fs";
-import path from "node:path";
+import assets from "../../config/assets.js";
 
-const الصور = [
-  "https://i.postimg.cc/jj25dynJ/thumb-350-1080006.webp",
-  "https://i.postimg.cc/d32QSBpg/thumb-350-1239849.webp",
-  "https://i.imgur.com/VZKKBHv.jpeg",
-  "https://i.imgur.com/fX5iiTb.png"
-];
-
-const تأخير_الحذف = (filePath) => {
-  setTimeout(() => fs.rm(filePath, { force: true }, () => {}), 30_000);
-};
+const صور_المساعدة = [
+  assets.imagePaths.banner,
+  assets.imagePaths.avatar,
+].filter((filePath) => fs.existsSync(filePath));
 
 export default {
   name: "اوامر",
@@ -54,22 +47,20 @@ export default {
     message += visible.map((command, index) => `${start + index + 1}. ${command.name}`).join("\n");
     message += `\n━━━━━━━━━━━━━━━━━━\nالصفحة: ${page}/${totalPages}\nالإجمالي: ${commandList.length}\nأرسل رقم العملية لمعرفة تفاصيلها.`;
 
-    const imageUrl = الصور[Math.floor(Math.random() * الصور.length)];
-    const tempFolder = path.join(process.cwd(), "temp");
-    const tempPath = path.join(tempFolder, `shadow-help-${Date.now()}.jpg`);
+    const imagePath = صور_المساعدة[Math.floor(Math.random() * صور_المساعدة.length)];
+    if (!imagePath) return api.sendMessage(message, event.threadID, event.messageID);
 
     try {
-      fs.mkdirSync(tempFolder, { recursive: true });
-      const response = await axios.get(imageUrl, { responseType: "arraybuffer", timeout: 15_000 });
-      fs.writeFileSync(tempPath, response.data);
-      const sent = await api.sendMessage({ body: message, attachment: fs.createReadStream(tempPath) }, event.threadID);
+      const sent = await api.sendMessage(
+        { body: message, attachment: fs.createReadStream(imagePath) },
+        event.threadID,
+      );
       global.client?.handler?.reply?.set?.(sent?.messageID, {
         author: event.senderID,
         type: "pick",
         name: "اوامر",
-        unsend: false
+        unsend: false,
       });
-      تأخير_الحذف(tempPath);
       return sent;
     } catch {
       return api.sendMessage(message, event.threadID, event.messageID);

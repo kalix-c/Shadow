@@ -38,7 +38,7 @@ const prompts = [
 
 export default {
   name: "ماذا_لو",
-  author: "kaguya project",
+  author: "محمد الشاوني",
   role: "member",
   description: "لعبة يدخل فيها شخصين في قصص عشوائية",
   execute: async ({ api, event, args }) => {

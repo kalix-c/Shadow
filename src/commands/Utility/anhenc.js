@@ -25,7 +25,7 @@ async function generateDescriptionFromPrompt(promptText) {
 
 export default {
     name: "برومبت",
-    author: "kaguya project",
+    author: "محمد الشاوني",
     role: "member",
     description: "قم بتوليد وصف للكلمة من خلال برومبت",
     execute: async ({ api, event, args }) => {

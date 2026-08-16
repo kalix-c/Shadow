@@ -37,7 +37,7 @@ async function getQuranVerse({ api, event, args }) {
 
 export default {
     name: 'آيات',
-    author: 'kaguya project',
+    author: 'محمد الشاوني',
     role: 'member',
     description: 'يقوم بجلب الآية القرآنية بناءً على رقم السورة ورقم الآية.',
     execute: getQuranVerse

@@ -5,7 +5,7 @@ import moment from 'moment-timezone';
 
 export default {
   name: "ارسمي",
-  author: "kaguya project",
+  author: "محمد الشاوني",
   role: "member",
   description: "توليد صور بناءً على الوصف.",
   async execute({ message, args, api, event }) {

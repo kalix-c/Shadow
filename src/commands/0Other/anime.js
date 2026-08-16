@@ -71,7 +71,7 @@ api.setMessageReaction("✅", event.messageID, (err) => {}, true);
 
       export default {
           name: "سيجما",
-          author: "kaguya project",
+          author: "محمد الشاوني",
           role: "member",
           description: "يرسل مقاطع سيجما",
           execute: sendRandomAudioClip

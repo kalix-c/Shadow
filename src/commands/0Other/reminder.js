@@ -1,6 +1,6 @@
 export default {
   name: "ذكريني",
-  author: "kaguya project",
+  author: "محمد الشاوني",
   role: "member",
   description: "يستخدم لإرسال تذكير بعد فترة زمنية محددة.",
   execute: async ({ api, event, args }) => {

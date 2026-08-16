@@ -68,7 +68,7 @@ api.setMessageReaction("✅", event.messageID, (err) => {}, true);
 
       export default {
           name: "قرآن",
-          author: "kaguya project",
+          author: "محمد الشاوني",
           role: "member",
           description: "يرسل ما تيسر من القرآن",
           execute: sendRandomAudioClip

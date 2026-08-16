@@ -1,9 +1,7 @@
-import path from 'path';
-import axios from 'axios';
 import { log } from "../logger/index.js";
 
 export class CommandHandler {
-  constructor({ api, event, Threads, Users, Economy, Exp }) {
+  constructor({ api, event, Threads, Users, Economy, Exp, Stats }) {
     this.arguments = {
       api,
       event,
@@ -11,6 +9,7 @@ export class CommandHandler {
       Threads,
       Economy,
       Exp,
+      Stats,
     };
     this.client = global.client;
     this.config = this.client?.config || {};

@@ -1,6 +1,6 @@
 export default {
   name: "زخرفة",
-  author: "kaguya project",
+  author: "محمد الشاوني",
   role: "member",
   description: "زخرفة النص العربي.",
 

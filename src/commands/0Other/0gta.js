@@ -46,7 +46,7 @@ async function execute({ api, event }) {
 
 export default {
   name: "تلوين",
-  author: "kaguya project",
+  author: "محمد الشاوني",
   description: "يقوم بتلوين الصورة المرسلة بألوان مختلفة.",
   execute,
 };

@@ -1,6 +1,6 @@
 export default {
   name: "غادري",
-  author: "kaguya project",
+  author: "محمد الشاوني",
   role: "admin",
   description: "إزالة مستخدم من المجموعة",
   aliases : ["اخرجي"],

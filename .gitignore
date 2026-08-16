@@ -1,7 +1,7 @@
 node_modules/
 
 # جلسة Messenger والأسرار
-KaguyaSetUp/KaguyaState.json
+ShadowSetUp/ShadowState.json
 .env
 .env.*
 *.pem
@@ -20,4 +20,12 @@ temp/
 *.jpg
 *.jpeg
 *.gif
+
+# أصول Shadow المخصصة المتتبعة في المستودع
+!assets/
+!assets/shadow/
+!assets/shadow/*.png
+!assets/shadow-sticker.png
+assets/shadow-sticker_original.png
+
 .DS_Store

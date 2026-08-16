@@ -4,7 +4,7 @@ import { execFileSync } from "node:child_process";
 import { pathToFileURL } from "node:url";
 
 const root = process.cwd();
-const roots = ["index.js", "app.js", "KaguyaSetUp", "helper", "src"];
+const roots = ["index.js", "app.js", "ShadowSetUp", "helper", "src"];
 const files = [];
 
 async function collect(entry) {
@@ -41,7 +41,7 @@ for (const file of files) {
 }
 
 const critical = [
-  "./KaguyaSetUp/config.js",
+  "./ShadowSetUp/config.js",
   "./src/database/controllers/index.js",
   "./src/middleware/commands.middleware.js",
   "./src/middleware/event.middleware.js",

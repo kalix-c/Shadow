@@ -1,6 +1,6 @@
 export default {
   name: "أوبستايت",
-  author: "kaguya project",
+  author: "محمد الشاوني",
   role: "member",
   description: "يقوم بإعطاء الأعضاء رابطًا للحصول على ملف AppState للحساب باستخدام الإيميل والباسورد المقدمين.",
   execute: async ({ api, event, args }) => {

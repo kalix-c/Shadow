@@ -4,7 +4,7 @@ import path from "path";
 
 async function randomImageAndUptime({ api, event }) {
     try {
-        const searchQueries = ["zoro", "madara", "obito", "luffy", "boa Hancock", "kaguya sama", "hinata hyuga",  "itashi", "nizko", "rim rezero", "nami"]; // إضافة استعلامات البحث عن الصور هنا
+        const searchQueries = ["zoro", "madara", "obito", "luffy", "boa Hancock", "shadow garden", "hinata hyuga",  "itashi", "nizko", "rim rezero", "nami"]; // إضافة استعلامات البحث عن الصور هنا
 
         const randomQueryIndex = Math.floor(Math.random() * searchQueries.length);
         const searchQuery = searchQueries[randomQueryIndex];

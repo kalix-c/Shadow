@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export default {
     name: "أخبار_الأنمي",
-    author: "kaguya project",
+    author: "محمد الشاوني",
     role: "member",
     description: "يرسل أهم 5 أخبار عن الأنمي باللغة العربية.",
 

@@ -1,6 +1,6 @@
 export default {
   name: "اكس_او",
-  author: "kaguya project",
+  author: "محمد الشاوني",
   role: "member",
   description: "لعبة اكس او باستخدام الرد",
 

@@ -2,7 +2,7 @@ import moment from 'moment-timezone';
 
 export default {
   name: 'قبول',
-  author: 'kaguya project',
+  author: 'محمد الشاوني',
   role: 'member',
   description: 'إدارة طلبات الصداقة من خلال قبول أو حذف الطلبات حسب اختيار المستخدم.',
 

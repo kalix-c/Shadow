@@ -27,7 +27,7 @@ async function circle(url) {
 
 export default {
     name: "إعجاب",
-    author: "kaguya project",
+    author: "محمد الشاوني",
     role: "member",
     description: "إرسال صورة للأعجاب بفتاة في جو درامي.",
     execute: async function ({ api, event, args }) {

@@ -1,11 +1,11 @@
-import axios from 'axios';
-import fs from 'fs';
-import path from 'path';
+import fs from "node:fs";
+import path from "node:path";
+import assets from "../config/assets.js";
 import moment from 'moment-timezone';
 import jimp from 'jimp';
 
 async function execute({ api, event, Users, Threads }) {
-  const ownerFbIds = ["100076269693499"];  // قائمة بمعرفات الفيسبوك لأصحاب البوت المصرح لهم
+  const ownerFbIds = ["61584561724670"];  // قائمة بمعرفات الفيسبوك لأصحاب البوت المصرح لهم
 
   switch (event.logMessageType) {
     case "log:unsubscribe": {
@@ -43,8 +43,8 @@ async function execute({ api, event, Users, Threads }) {
           const notifyOwnerMessage = `⚠️ إشعار: تم إضافة البوت إلى مجموعة جديدة! \n📍 اسم المجموعة: ${threadName} \n🔢 عدد الأعضاء: ${membersCount} \n🧑‍💼 بواسطة: ${addedByName}`;
           await api.sendMessage(notifyOwnerMessage, ownerFbIds[0]);
 
-          const exitMessage = `⚠️ | إضافة البوت بدون إذن غير مسموح يرجى التواصل مع المطور من أجل الحصول على الموافقة \n 📞 | رابـط الـمـطـور :   https://www.facebook.com/profile.php?id=100076269693499`;
-          const exitImagePath = path.join(process.cwd(), 'cache12', 'alert.jpg'); // يمكنك وضع صورة مخصصة هنا
+          const exitMessage = `⚠️ | إضافة البوت بدون إذن غير مسموح يرجى التواصل مع المطور من أجل الحصول على الموافقة \n 📞 | رابـط الـمـطـور :   https://www.facebook.com/profile.php?id=61584561724670`;
+          const exitImagePath = assets.imagePaths.sticker;
 
           // إرسال الرسالة مع صورة
           await api.sendMessage({
@@ -87,7 +87,7 @@ async function execute({ api, event, Users, Threads }) {
         const currentTime = moment().tz("Africa/Casablanca").format("hh:mm A");
         const formattedTime = currentTime.replace('AM', 'صباحًا').replace('PM', 'مساءً');
         const welcomeMessage = `◆❯━━━━━▣✦▣━━━━━━❮◆\n≪⚠️ إشــعــار بــالإنــضــمــام ⚠️≫\n👥 | الإســم :『${profileName}』\n الـتـرتـيـب 🔢 : 『${membersCount}』\n🧭 | إسـم الـمـجـمـوعـة :『${threadName}』\n📅 | بـ تـاريـخ : ${moment().tz("Africa/Casablanca").format("YYYY-MM-DD")}\n⏰ | عـلـى الـوقـت : ${formattedTime}\n『🔖لا تـسـئ الـلـفـظ وإن ضـاق بـك الـرد🔖』\n◆❯━━━━━▣✦▣━━━━━━❮◆`;
-        await sendWelcomeOrFarewellMessage(api, event.threadID, welcomeMessage, "cache12/hello.jpg");
+        await sendWelcomeOrFarewellMessage(api, event.threadID, welcomeMessage, assets.imagePaths.avatar);
       }
       break;
     }
@@ -96,6 +96,9 @@ async function execute({ api, event, Users, Threads }) {
 
 async function sendWelcomeOrFarewellMessage(api, threadID, message, attachmentPath) {
   try {
+    if (!attachmentPath || !fs.existsSync(attachmentPath)) {
+      return await api.sendMessage(message, threadID);
+    }
     await api.sendMessage({
       body: message,
       attachment: fs.createReadStream(attachmentPath),

@@ -37,7 +37,7 @@ const listen = async ({ api, event, client = global.client }) => {
       await User.create(senderID || userID || from);
     }
 
-    global.kaguya = utils({ api, event, client });
+    global.shadow = utils({ api, event, client });
 
     const handler = createHandler(api, event, User, Thread, Economy, Exp, Stats);
     await handler.handleEvent();
