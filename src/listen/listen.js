@@ -1,5 +1,5 @@
 import { CommandHandler } from "../handler/handlers.js";
-import { threadsController, usersController, economyControllers, expControllers } from "../database/controllers/index.js";
+import { threadsController, usersController, economyControllers, expControllers, statsControllers } from "../database/controllers/index.js";
 import { utils } from "../helper/index.js";
 
 /**
@@ -12,8 +12,8 @@ import { utils } from "../helper/index.js";
  * @param {object} Exp - Đối tượng kinh nghiệm.
  * @returns {CommandHandler} - Trình xử lý lệnh.
  */
-const createHandler = (api, event, User, Thread, Economy, Exp) => {
-  const args = { api, event, Users: User, Threads: Thread, Economy, Exp };
+const createHandler = (api, event, User, Thread, Economy, Exp, Stats) => {
+  const args = { api, event, Users: User, Threads: Thread, Economy, Exp, Stats };
   return new CommandHandler(args);
 };
 
@@ -28,6 +28,7 @@ const listen = async ({ api, event }) => {
     const User = usersController({ api });
     const Economy = economyControllers({ api, event });
     const Exp = expControllers({ api, event });
+    const Stats = statsControllers();
 
     if (["message", "message_reply", "message_reaction", "typ"].includes(type)) {
       if (isGroup) {
@@ -38,7 +39,7 @@ const listen = async ({ api, event }) => {
 
     global.kaguya = utils({ api, event });
 
-    const handler = createHandler(api, event, User, Thread, Economy, Exp);
+    const handler = createHandler(api, event, User, Thread, Economy, Exp, Stats);
     handler.handleEvent();
 
     switch (type) {

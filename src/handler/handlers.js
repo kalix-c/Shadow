@@ -105,6 +105,11 @@ export class CommandHandler {
 
       // Execute command
       log([{ message: "[ SHADOW EXEC ]: ", color: "purple" }, { message: `${command.name} by ${senderID}`, color: "white" }]);
+      
+      // Update Stats
+      const Stats = this.arguments.Stats || (typeof this.arguments.StatsController === 'function' ? this.arguments.StatsController() : null);
+      if (Stats) Stats.incrementCommand(command.name, senderID);
+      
       command.execute({ ...this.arguments, args });
       
     } catch (error) {
