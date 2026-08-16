@@ -1,5 +1,5 @@
 export default {
-    "prefix": "!",
+    "prefix": ".",
     "language": "ar_MA",
     "BOT_NAME": "⚡ 𝐒𝐇𝐀𝐃𝐎𝐖 ⚡",
     "ADMIN_IDS": [

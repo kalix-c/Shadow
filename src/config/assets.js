@@ -1,15 +1,17 @@
 export default {
-    shadow_main: "https://i.ibb.co/L5Q1z1G/shadow-main.jpg", // Shadow/Cid image
+    shadow_main: "https://i.postimg.cc/jj25dynJ/thumb-350-1080006.webp",
     atomic_gif: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJqZ3h5Z3h5Z3h5Z3h5Z3h5Z3h5Z3h5Z3h5Z3h5Z3h5JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/I3EsiEPZWgpqg/giphy.gif",
     garden_members: [
-        "https://i.ibb.co/xS1z1z1/alpha.jpg",
-        "https://i.ibb.co/xS2z2z2/beta.jpg",
-        "https://i.ibb.co/xS3z3z3/gamma.jpg"
+        "https://i.postimg.cc/jj25dynJ/thumb-350-1080006.webp",
+        "https://i.postimg.cc/d32QSBpg/thumb-350-1239849.webp"
     ],
     quotes: [
-        "I am the one who lurks in the shadows to hunt the shadows.",
-        "My name is Shadow. I lurk in the shadows, and hunt the shadows...",
-        "I am Atomic.",
-        "The night is still young. The hunt has just begun."
+        "أنا الشخص الذي يتبرعم في الظلال ليصطاد الظلال...",
+        "أنا أتذوق طعم القوة في أن أكون Eminence in Shadow الحقيقي!",
+        "I AM ATOMIC.",
+        "البعوض قد يأتي بأسراب، لكن الأسد لا يسقط أبداً!",
+        "منظمتنا لم تسقط أبداً في طريق الشر المطلق، ولا نسير في طريق البريء... نحن نسير في طريقنا الخاص.",
+        "إذا تطلب الأمر حفر الأعماق حتى نهاية العالم... فسأفعل.",
+        "هل اعتقدت حقاً أنه يمكنك الهرب مني؟"
     ]
 };
