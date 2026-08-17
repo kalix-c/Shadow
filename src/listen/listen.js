@@ -48,6 +48,7 @@ const listen = async ({ api, event, client = global.client }) => {
 
     switch (type) {
       case "message":
+        console.log(`[ MQTT EVENT ]: Received ${isGroup ? "group" : "direct"} message; forwarding to command handler.`);
         await handler.handleCommand();
         break;
       case "message_reaction":
@@ -55,6 +56,7 @@ const listen = async ({ api, event, client = global.client }) => {
         break;
       case "message_reply":
         await handler.handleReply();
+        console.log(`[ MQTT EVENT ]: Received ${isGroup ? "group" : "direct"} reply; forwarding to command handler.`);
         await handler.handleCommand();
         break;
       default:
