@@ -24,6 +24,7 @@ const createHandler = (api, event, User, Thread, Economy, Exp, Stats) => {
 const listen = async ({ api, event, client = global.client }) => {
   try {
     const { threadID, senderID, type, userID, from, isGroup } = event;
+    console.log(`[ MQTT EVENT ]: Received event type=${type || "unknown"}; source=${isGroup ? "group" : "direct"}.`);
     const Thread = threadsController({ api });
     const User = usersController({ api });
     const Economy = economyControllers({ api, event });
