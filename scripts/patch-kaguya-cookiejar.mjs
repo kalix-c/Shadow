@@ -135,3 +135,33 @@ writeIfChanged(
   },
   "MQTT status signals"
 );
+
+writeIfChanged(
+  "src/getThreadInfo.js",
+  (source) => {
+    const originalCatch = `      .catch(function(err) {
+        log.error("getThreadInfoGraphQL", err);
+        return callback(err);
+      });`;
+    const fallbackCatch = `      .catch(function(err) {
+        // Facebook may reject this legacy GraphQL document with error 1357004.
+        // Kaguya already ships a Mercury-based fallback; use it without logging
+        // thread IDs, cookies, or the raw upstream response.
+        if (Number(err?.error) === 1357004 && typeof api.getThreadInfoDeprecated === "function") {
+          console.warn("[ SHADOW ]: Thread metadata GraphQL unavailable; using compatible fallback.");
+          return api.getThreadInfoDeprecated(threadID, callback);
+        }
+        log.error("getThreadInfoGraphQL", err);
+        return callback(err);
+      });`;
+
+    if (source.includes("Thread metadata GraphQL unavailable; using compatible fallback.")) {
+      return source;
+    }
+    if (!source.includes(originalCatch)) {
+      throw new Error("[Kaguya patch] thread-info fallback: expected source fragment was not found.");
+    }
+    return source.replace(originalCatch, fallbackCatch);
+  },
+  "thread-info fallback"
+);

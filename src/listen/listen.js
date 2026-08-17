@@ -33,7 +33,12 @@ const listen = async ({ api, event, client = global.client }) => {
 
     if (["message", "message_reply", "message_reaction", "typ"].includes(type)) {
       try {
-        if (isGroup) {
+        // Facebook currently rejects Kaguya's legacy thread-info GraphQL query
+        // for this session. Thread metadata is optional for command routing, so
+        // never let that enrichment request block ordinary incoming commands.
+        // It can be enabled deliberately for maintenance when the upstream API
+        // becomes available again.
+        if (isGroup && process.env.SHADOW_ENRICH_THREAD_METADATA === "YES") {
           await Thread.create(threadID);
         }
         await User.create(senderID || userID || from);

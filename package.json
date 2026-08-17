@@ -9,7 +9,8 @@
     "health": "node app.js",
     "dev": "nodemon .",
     "check": "node scripts/validate.mjs",
-    "test": "npm run check",
+    "test:graphql-recovery": "node scripts/test-graphql-recovery.mjs",
+    "test": "npm run check && npm run test:graphql-recovery",
     "patch:kaguya": "node scripts/patch-kaguya-cookiejar.mjs",
     "postinstall": "npm run patch:kaguya"
   },
