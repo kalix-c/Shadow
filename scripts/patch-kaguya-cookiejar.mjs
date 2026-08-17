@@ -81,6 +81,14 @@ writeIfChanged(
   (source) => {
     const errorMarker = `\tmqttClient.on('error', function (err) {\n\t\tlog.error("listenMqtt", err);\n`;
     const connectedMarker = `\tmqttClient.on('connect', function () {\n`;
+    const closeMarker = `\tmqttClient.on('close', function () {\n\n\t});\n`;
+
+    if (!source.includes("let shadowMqttConnected = false;")) {
+      if (!source.includes(errorMarker)) {
+        throw new Error("[Kaguya patch] MQTT connection flag: expected source fragment was not found.");
+      }
+      source = source.replace(errorMarker, `\tlet shadowMqttConnected = false;\n\n${errorMarker}`);
+    }
 
     if (!source.includes('type: "mqtt_error"')) {
       if (!source.includes(errorMarker)) {
@@ -98,7 +106,17 @@ writeIfChanged(
       }
       source = source.replace(
         connectedMarker,
-        `${connectedMarker}\t\tglobalCallback(null, { type: "mqtt_connected" });\n`
+        `${connectedMarker}\t\tshadowMqttConnected = true;\n\t\tglobalCallback(null, { type: "mqtt_connected" });\n`
+      );
+    }
+
+    if (!source.includes('type: "mqtt_closed_before_connect"')) {
+      if (!source.includes(closeMarker)) {
+        throw new Error("[Kaguya patch] MQTT close signal: expected source fragment was not found.");
+      }
+      source = source.replace(
+        closeMarker,
+        `\tmqttClient.on('close', function () {\n\t\tif (!shadowMqttConnected) {\n\t\t\tglobalCallback({ type: "mqtt_closed_before_connect", error: "WebSocket closed before MQTT connection." }, null);\n\t\t}\n\t});\n`
       );
     }
 
