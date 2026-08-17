@@ -31,10 +31,14 @@ const listen = async ({ api, event, client = global.client }) => {
     const Stats = statsControllers();
 
     if (["message", "message_reply", "message_reaction", "typ"].includes(type)) {
-      if (isGroup) {
-        await Thread.create(threadID);
+      try {
+        if (isGroup) {
+          await Thread.create(threadID);
+        }
+        await User.create(senderID || userID || from);
+      } catch (error) {
+        console.warn("[ SHADOW DB ]: Message metadata could not be refreshed; continuing to handle the event.");
       }
-      await User.create(senderID || userID || from);
     }
 
     global.shadow = utils({ api, event, client });

@@ -123,6 +123,11 @@ class Shadow extends EventEmitter {
 
           const handleMqttEvent = async (mqttError, event) => {
             if (mqttError) {
+              if (mqttError.type === "ready") {
+                log([{ message: "[ MQTT ]: ", color: "green" }, { message: "Messenger listener is ready for commands.", color: "white" }]);
+                return;
+              }
+
               const detail = mqttError.message || mqttError.error || "Unknown MQTT error";
               log([{ message: "[ MQTT ERROR ]: ", color: "red" }, { message: detail, color: "white" }]);
               return;
