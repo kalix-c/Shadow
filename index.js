@@ -95,8 +95,6 @@ class Shadow extends EventEmitter {
 
       await commandMiddleware();
       await eventMiddleware();
-      
-      this.displayIntro();
 
       this.on("system:run", () => {
         const connectionOptions = {
@@ -105,7 +103,17 @@ class Shadow extends EventEmitter {
           emitReady: true,
         };
 
+        let loginSettled = false;
+        const loginTimeout = setTimeout(() => {
+          if (!loginSettled) {
+            log([{ message: "[ LOGIN ]: ", color: "yellow" }, { message: "No response from Messenger after 30 seconds. Verify the saved session in a browser and replace it if Facebook requests a checkpoint.", color: "white" }]);
+          }
+        }, 30000);
+
         login({ appState: credentials }, connectionOptions, async (err, api) => {
+          loginSettled = true;
+          clearTimeout(loginTimeout);
+
           if (err || !api) {
             this.emit("system:error", `Login failed: ${err?.message || err || "Unknown login error"}`);
             return;
@@ -138,6 +146,8 @@ class Shadow extends EventEmitter {
           }
         });
       });
+
+      this.displayIntro();
     })();
   }
 }

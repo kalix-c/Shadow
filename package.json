@@ -9,7 +9,9 @@
     "health": "node app.js",
     "dev": "nodemon .",
     "check": "node scripts/validate.mjs",
-    "test": "npm run check"
+    "test": "npm run check",
+    "patch:kaguya": "node scripts/patch-kaguya-cookiejar.mjs",
+    "postinstall": "npm run patch:kaguya"
   },
   "author": "محمد الشاوني",
   "license": "ISC",
