@@ -133,7 +133,13 @@ class Shadow extends EventEmitter {
               return;
             }
 
+            if (event?.type === "mqtt_connected") {
+              log([{ message: "[ MQTT ]: ", color: "green" }, { message: "WebSocket connected; waiting for Messenger sync.", color: "white" }]);
+              return;
+            }
+
             if (event) {
+              log([{ message: "[ MQTT EVENT ]: ", color: "purple" }, { message: `Received ${event.type || "unknown"} event (group: ${Boolean(event.isGroup)}).`, color: "white" }]);
               await listen({ api, event, client: global.client });
             }
           };

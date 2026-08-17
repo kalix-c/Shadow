@@ -75,3 +75,34 @@ writeIfChanged(
   ),
   "response cookie sync"
 );
+
+writeIfChanged(
+  "src/listenMqtt.js",
+  (source) => {
+    const errorMarker = `\tmqttClient.on('error', function (err) {\n\t\tlog.error("listenMqtt", err);\n`;
+    const connectedMarker = `\tmqttClient.on('connect', function () {\n`;
+
+    if (!source.includes('type: "mqtt_error"')) {
+      if (!source.includes(errorMarker)) {
+        throw new Error("[Kaguya patch] MQTT error signal: expected source fragment was not found.");
+      }
+      source = source.replace(
+        errorMarker,
+        `${errorMarker}\t\tglobalCallback({ type: "mqtt_error", error: err?.message || String(err) }, null);\n`
+      );
+    }
+
+    if (!source.includes('type: "mqtt_connected"')) {
+      if (!source.includes(connectedMarker)) {
+        throw new Error("[Kaguya patch] MQTT connection signal: expected source fragment was not found.");
+      }
+      source = source.replace(
+        connectedMarker,
+        `${connectedMarker}\t\tglobalCallback(null, { type: "mqtt_connected" });\n`
+      );
+    }
+
+    return source;
+  },
+  "MQTT status signals"
+);
