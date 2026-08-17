@@ -99,43 +99,43 @@ class Shadow extends EventEmitter {
       this.displayIntro();
 
       this.on("system:run", () => {
-        login({ appState: credentials }, async (err, api) => {
+        const connectionOptions = {
+          ...this.currentConfig.options,
+          autoReconnect: true,
+          emitReady: true,
+        };
+
+        login({ appState: credentials }, connectionOptions, async (err, api) => {
           if (err || !api) {
             this.emit("system:error", `Login failed: ${err?.message || err || "Unknown login error"}`);
             return;
           }
 
-          api.setOptions(this.currentConfig.options);
+          api.setOptions(connectionOptions);
 
-          const listenMqtt = async () => {
-            try {
-              if (!listenMqtt.isListening) {
-                listenMqtt.isListening = true;
-                const mqtt = await api.listenMqtt(async (err, event) => {
-                  if (err) {
-                    log([{ message: "[ MQTT ERROR ]: ", color: "red" }, { message: err.message, color: "white" }]);
-                  }
-                  if (event) {
-                    await listen({ api, event, client: global.client });
-                  }
-                });
-                
-                await sleep(this.currentConfig.mqtt_refresh);
-                log([{ message: "[ MQTT ]: ", color: "purple" }, { message: "Refreshing Shadow connection...", color: "white" }]);
-                
-                await mqtt.stopListening();
-                await sleep(5000);
-                listenMqtt.isListening = false;
-              }
-              listenMqtt();
-            } catch (error) {
-              log([{ message: "[ CRITICAL ]: ", color: "red" }, { message: `Shadow connection lost: ${error.message}`, color: "white" }]);
-              setTimeout(listenMqtt, 10000);
+          const handleMqttEvent = async (mqttError, event) => {
+            if (mqttError) {
+              const detail = mqttError.message || mqttError.error || "Unknown MQTT error";
+              log([{ message: "[ MQTT ERROR ]: ", color: "red" }, { message: detail, color: "white" }]);
+              return;
+            }
+
+            if (event?.type === "ready") {
+              log([{ message: "[ MQTT ]: ", color: "green" }, { message: "Messenger listener is ready for commands.", color: "white" }]);
+              return;
+            }
+
+            if (event) {
+              await listen({ api, event, client: global.client });
             }
           };
 
-          listenMqtt.isListening = false;
-          listenMqtt();
+          try {
+            api.listenMqtt(handleMqttEvent);
+            log([{ message: "[ MQTT ]: ", color: "purple" }, { message: "Connecting to Messenger...", color: "white" }]);
+          } catch (error) {
+            log([{ message: "[ CRITICAL ]: ", color: "red" }, { message: `Unable to start Messenger listener: ${error.message}`, color: "white" }]);
+          }
         });
       });
     })();
