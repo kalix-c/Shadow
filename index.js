@@ -143,6 +143,11 @@ class Shadow extends EventEmitter {
               return;
             }
 
+            if (event?.type === "mqtt_topic") {
+              log([{ message: "[ MQTT TOPIC ]: ", color: "purple" }, { message: `Observed ${event.topic || "unknown"}.`, color: "white" }]);
+              return;
+            }
+
             if (event) {
               log([{ message: "[ MQTT EVENT ]: ", color: "purple" }, { message: `Received ${event.type || "unknown"} event (group: ${Boolean(event.isGroup)}).`, color: "white" }]);
               await listen({ api, event, client: global.client });

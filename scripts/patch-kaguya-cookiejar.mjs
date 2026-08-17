@@ -102,6 +102,17 @@ writeIfChanged(
       );
     }
 
+    const messageMarker = `\tmqttClient.on('message', function (topic, message, _packet) {\n`;
+    if (!source.includes('type: "mqtt_topic"')) {
+      if (!source.includes(messageMarker)) {
+        throw new Error("[Kaguya patch] MQTT topic signal: expected source fragment was not found.");
+      }
+      source = source.replace(
+        messageMarker,
+        `${messageMarker}\t\tctx.reportedTopics = ctx.reportedTopics || new Set();\n\t\tif (!ctx.reportedTopics.has(topic)) {\n\t\t\tctx.reportedTopics.add(topic);\n\t\t\tglobalCallback(null, { type: "mqtt_topic", topic });\n\t\t}\n`
+      );
+    }
+
     return source;
   },
   "MQTT status signals"
