@@ -18,6 +18,7 @@ assert.deepEqual(
 );
 
 assert.equal(normalizeMqttCallback({ type: "mqtt_queue_blocked" }, null).kind, "transport_error");
+assert.equal(normalizeMqttCallback({ type: "mqtt_connect_timeout", code: "MQTT_CONNECT_TIMEOUT" }, null).kind, "transport_error");
 assert.equal(normalizeMqttCallback(null, { type: "typ", isGroup: true }).kind, "event");
 
 const received = [];
