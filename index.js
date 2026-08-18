@@ -28,6 +28,7 @@ class Shadow extends EventEmitter {
       process.exit(1);
     });
     this.currentConfig = config;
+    this.runtimeProfile = process.env.SHADOW_RUNTIME_PROFILE === "core" ? "core" : "full";
     this.watcher = chokidar.watch("./ShadowSetUp/config.js");
     this.statePath = "./ShadowSetUp/ShadowState.json";
     this.package = JSON.parse(fs.readFileSync("./package.json"));
@@ -117,8 +118,14 @@ class Shadow extends EventEmitter {
         let responder = null;
 
         messenger.once("apiReady", (api) => {
-          responder = new ShadowResponseEngine({ api, client: global.client });
-          log([{ message: "[ SHADOW RESPONSE ]: ", color: "green" }, { message: "Command engine initialized.", color: "white" }]);
+          const createContext = this.runtimeProfile === "core"
+            ? async ({ event, args }) => ({ api, event, args, client: global.client })
+            : undefined;
+          responder = new ShadowResponseEngine({ api, client: global.client, createContext });
+          const detail = this.runtimeProfile === "core"
+            ? "Core command engine initialized."
+            : "Command engine initialized.";
+          log([{ message: "[ SHADOW RESPONSE ]: ", color: "green" }, { message: detail, color: "white" }]);
         });
 
         messenger.on("status", (status) => {

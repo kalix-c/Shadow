@@ -4,6 +4,7 @@ import { execFileSync } from "node:child_process";
 import { pathToFileURL } from "node:url";
 
 const root = process.cwd();
+const coreRuntime = process.env.SHADOW_RUNTIME_PROFILE === "core";
 const roots = ["index.js", "app.js", "ShadowSetUp", "helper", "src"];
 const files = [];
 
@@ -40,7 +41,7 @@ for (const file of files) {
   }
 }
 
-const critical = [
+const fullCritical = [
   "./ShadowSetUp/config.js",
   "./src/database/controllers/index.js",
   "./src/middleware/commands.middleware.js",
@@ -52,6 +53,15 @@ const critical = [
   "./src/commands/ShadowGarden/quote.js",
   "./src/commands/2Game/shadowgame.js"
 ];
+const coreCritical = [
+  "./ShadowSetUp/config.js",
+  "./src/middleware/commands.middleware.js",
+  "./src/middleware/event.middleware.js",
+  "./src/config/assets.js",
+  "./src/commands/Utility/help.js",
+  "./src/shadow/ShadowResponseEngine.js"
+];
+const critical = coreRuntime ? coreCritical : fullCritical;
 
 for (const modulePath of critical) {
   try {

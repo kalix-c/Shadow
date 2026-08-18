@@ -1,5 +1,4 @@
 import chalk from "chalk";
-import notifier from "node-notifier";
 
 const colors = {
   red: "#ff0000",
@@ -26,7 +25,8 @@ export const log = async (messages = []) => {
 
 export const notifer = async (title, message) => {
   if (process.platform === "win32" || process.platform === "win64") {
-    notifier.notify({
+    const { default: notifier } = await import("node-notifier").catch(() => ({ default: null }));
+    notifier?.notify({
       appName: "Shadow Bot",
       title,
       message,

@@ -1,15 +1,14 @@
-import {
-  economyControllers,
-  expControllers,
-  statsControllers,
-  threadsController,
-  usersController,
-} from "../database/controllers/index.js";
-
 const normalizeCommandName = (value) => String(value || "")
   .trim()
   .normalize("NFKC")
   .toLocaleLowerCase("ar");
+
+let controllerModulePromise;
+
+const loadControllers = () => {
+  if (!controllerModulePromise) controllerModulePromise = import("../database/controllers/index.js");
+  return controllerModulePromise;
+};
 
 /**
  * محرك أوامر Shadow المستقل.
@@ -67,6 +66,14 @@ export class ShadowResponseEngine {
   }
 
   async createDefaultContext({ event, args }) {
+    const {
+      economyControllers,
+      expControllers,
+      statsControllers,
+      threadsController,
+      usersController,
+    } = await loadControllers();
+
     return {
       api: this.api,
       event,

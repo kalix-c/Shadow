@@ -9,14 +9,16 @@ import path from "path";
 export const commandMiddleware = async () => {
   try {
     const baseDir = "./src/commands";
-    const dir = await fs.readdir(baseDir);
+    const coreRuntime = process.env.SHADOW_RUNTIME_PROFILE === "core";
+    const coreCommands = { Utility: ["help.js"] };
+    const dir = coreRuntime ? Object.keys(coreCommands) : await fs.readdir(baseDir);
     
     const loadPromises = dir.map(async (directory) => {
       const fullPath = path.join(baseDir, directory);
       const stat = await fs.stat(fullPath);
       
       if (stat.isDirectory()) {
-        const cmdFiles = await fs.readdir(fullPath);
+        const cmdFiles = coreRuntime ? coreCommands[directory] : await fs.readdir(fullPath);
         for (const file of cmdFiles) {
           if (!file.endsWith(".js")) continue;
           
@@ -46,7 +48,10 @@ export const commandMiddleware = async () => {
     });
 
     await Promise.all(loadPromises);
-    log([{ message: "[ SHADOW ]: ", color: "purple" }, { message: "Shadow Vault opened. All powers manifested.", color: "green" }]);
+    const message = coreRuntime
+      ? "Core runtime loaded: command aliases for help are ready."
+      : "Shadow Vault opened. All powers manifested.";
+    log([{ message: "[ SHADOW ]: ", color: "purple" }, { message, color: "green" }]);
   } catch (error) {
     log([{ message: "[ SHADOW ]: ", color: "purple" }, { message: `Failed to open Shadow Vault: ${error.message}`, color: "red" }]);
   }

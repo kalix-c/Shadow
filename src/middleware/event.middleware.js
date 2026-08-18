@@ -2,6 +2,11 @@ import fs from "node:fs/promises";
 import { log } from "../logger/index.js";
 
 export const eventMiddleware = async () => {
+  if (process.env.SHADOW_RUNTIME_PROFILE === "core") {
+    log([{ message: "[ SHADOW EVENT ]: ", color: "purple" }, { message: "Optional event modules are deferred in core runtime.", color: "white" }]);
+    return;
+  }
+
   try {
     const baseDir = "./src/events";
     const dir = await fs.readdir(baseDir);
