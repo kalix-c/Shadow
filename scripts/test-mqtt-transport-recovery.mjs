@@ -22,7 +22,10 @@ const requiredMarkers = [
   "const maxAttempts = 2;",
   'type: "mqtt_recovery_attempt"',
   'type: "mqtt_recovery_escalated"',
-  "MQTT_READY_TIMEOUT"
+  "MQTT_READY_TIMEOUT",
+  "MQTT_CONNECT_TIMEOUT",
+  "const shadowConnectTimeout = setTimeout",
+  "clearTimeout(shadowConnectTimeout);"
 ];
 
 const missing = requiredMarkers.filter((marker) => !runtime.includes(marker));

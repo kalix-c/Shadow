@@ -440,6 +440,32 @@ ${listenerMarker}`);
       if (!source.includes("let shadowMqttConnected = false;")) throw new Error("[Kaguya patch] bounded recovery: connection flag was not found.");
       source = source.replace("let shadowMqttConnected = false;", "let shadowMqttConnected = false;\n\tlet shadowMqttRecoveryRequested = false;");
     }
+    if (!source.includes("MQTT_CONNECT_TIMEOUT")) {
+      const recoveryMarker = "let shadowMqttRecoveryRequested = false;";
+      const connectWatchdog = `let shadowMqttRecoveryRequested = false;
+	const shadowConnectTimeout = setTimeout(function () {
+		if (shadowMqttConnected) return;
+		shadowMqttRecoveryRequested = true;
+		globalCallback({ type: "mqtt_connect_timeout", code: "MQTT_CONNECT_TIMEOUT" }, null);
+		mqttClient.end();
+		if (ctx.globalOptions.autoReconnect && shadowRequestMqttRecovery(ctx, globalCallback, "MQTT_CONNECT_TIMEOUT")) {
+			listenMqtt(defaultFuncs, api, ctx, globalCallback);
+		}
+	}, 15000);`;
+      if (!source.includes(recoveryMarker)) throw new Error("[Kaguya patch] connection watchdog: recovery marker was not found.");
+      source = source.replace(recoveryMarker, connectWatchdog);
+    }
+    if (!source.includes("clearTimeout(shadowConnectTimeout);")) {
+      const errorMarker = "\tmqttClient.on('error', function (err) {\n";
+      const closeMarker = "\tmqttClient.on('close', function () {\n";
+      const connectedMarker = "\tmqttClient.on('connect', function () {\n";
+      if (!source.includes(errorMarker) || !source.includes(closeMarker) || !source.includes(connectedMarker)) {
+        throw new Error("[Kaguya patch] connection watchdog: lifecycle markers were not found.");
+      }
+      source = source.replace(errorMarker, `${errorMarker}\t\tclearTimeout(shadowConnectTimeout);\n`);
+      source = source.replace(closeMarker, `${closeMarker}\t\tclearTimeout(shadowConnectTimeout);\n`);
+      source = source.replace(connectedMarker, `${connectedMarker}\t\tclearTimeout(shadowConnectTimeout);\n`);
+    }
     if (!source.includes("shadowMqttConnected = true;")) {
       if (!source.includes(connectedMarker)) throw new Error("[Kaguya patch] bounded recovery: connect marker was not found.");
       source = source.replace(connectedMarker, `${connectedMarker}\t\tshadowMqttConnected = true;\n\t\tctx.shadowMqttRecoveryAttempts = 0;\n`);
