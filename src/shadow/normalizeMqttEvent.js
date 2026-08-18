@@ -7,6 +7,7 @@ const statusTypes = new Set([
   "mqtt_sync_unavailable",
   "mqtt_queue_blocked",
   "mqtt_connect_timeout",
+  "mqtt_bootstrap_timeout",
   "mqtt_recovery_attempt",
   "mqtt_recovery_escalated",
   "stop_listen",
@@ -45,7 +46,7 @@ export function normalizeMqttCallback(primary, secondary) {
 
   if (statusTypes.has(candidate.type)) {
     return {
-      kind: candidate.type === "mqtt_error" || candidate.type === "mqtt_sync_unavailable" || candidate.type === "mqtt_queue_blocked" || candidate.type === "mqtt_connect_timeout" || candidate.type === "mqtt_recovery_escalated" || candidate.type === "stop_listen" || candidate.type === "account_inactive" || candidate.type === "mqtt_closed_before_connect"
+      kind: candidate.type === "mqtt_error" || candidate.type === "mqtt_sync_unavailable" || candidate.type === "mqtt_queue_blocked" || candidate.type === "mqtt_connect_timeout" || candidate.type === "mqtt_bootstrap_timeout" || candidate.type === "mqtt_recovery_escalated" || candidate.type === "stop_listen" || candidate.type === "account_inactive" || candidate.type === "mqtt_closed_before_connect"
         ? "transport_error"
         : "status",
       type: candidate.type,

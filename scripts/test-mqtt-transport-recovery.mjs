@@ -25,7 +25,10 @@ const requiredMarkers = [
   "MQTT_READY_TIMEOUT",
   "MQTT_CONNECT_TIMEOUT",
   "const shadowConnectTimeout = setTimeout",
-  "clearTimeout(shadowConnectTimeout);"
+  "clearTimeout(shadowConnectTimeout);",
+  "MQTT_BOOTSTRAP_TIMEOUT",
+  "const shadowBootstrapTimeout = setTimeout",
+  "clearTimeout(shadowBootstrapTimeout);"
 ];
 
 const missing = requiredMarkers.filter((marker) => !runtime.includes(marker));

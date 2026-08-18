@@ -414,6 +414,36 @@ function shadowEmitBootstrapOutcome(globalCallback, result) {
 writeIfChanged(
   "src/listenMqtt.js",
   (source) => {
+    const jarMarker = "\tconst jar = ctx.jar;";
+    const successMarker = "\t\t.then(function (resData) {\n";
+    const failureMarker = `\t\t.catch(function (err) {
+\t\t\tlog.error("getSeqId", err);
+\t\t});`;
+
+    if (!source.includes("MQTT_BOOTSTRAP_TIMEOUT")) {
+      if (!source.includes(jarMarker) || !source.includes(successMarker) || !source.includes(failureMarker)) {
+        throw new Error("[Kaguya patch] bootstrap watchdog: expected getSeqId fragments were not found.");
+      }
+      source = source.replace(jarMarker, `${jarMarker}
+\tconst shadowBootstrapTimeout = setTimeout(function () {
+\t\tglobalCallback({ type: "mqtt_bootstrap_timeout", code: "MQTT_BOOTSTRAP_TIMEOUT" }, null);
+\t}, 20000);`);
+      source = source.replace(successMarker, `${successMarker}\t\t\tclearTimeout(shadowBootstrapTimeout);\n`);
+      source = source.replace(failureMarker, `\t\t.catch(function (err) {
+\t\t\tclearTimeout(shadowBootstrapTimeout);
+\t\t\tglobalCallback({ type: "mqtt_bootstrap_timeout", code: "MQTT_BOOTSTRAP_REQUEST_FAILED" }, null);
+\t\t\tlog.error("getSeqId", err);
+\t\t});`);
+    }
+
+    return source;
+  },
+  "MQTT bootstrap watchdog"
+);
+
+writeIfChanged(
+  "src/listenMqtt.js",
+  (source) => {
     const listenerMarker = "function listenMqtt(defaultFuncs, api, ctx, globalCallback) {";
     const connectedMarker = "\tmqttClient.on('connect', function () {\n";
     const closeBlock = `\tmqttClient.on('close', function () {\n\t\tif (!shadowMqttConnected) {\n\t\t\tglobalCallback({ type: "mqtt_closed_before_connect", error: "WebSocket closed before MQTT connection." }, null);\n\t\t}\n\t});\n`;
