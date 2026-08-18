@@ -5,12 +5,26 @@ import { fileURLToPath } from "node:url";
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const listenerSource = fs.readFileSync(path.join(projectRoot, "src", "listen", "listen.js"), "utf8");
+const responseEngineSource = fs.readFileSync(path.join(projectRoot, "src", "shadow", "ShadowResponseEngine.js"), "utf8");
+const bootstrapExtractorSource = fs.readFileSync(path.join(projectRoot, "src", "shadow", "extractMqttBootstrap.js"), "utf8");
 const patchSource = fs.readFileSync(path.join(projectRoot, "scripts", "patch-kaguya-cookiejar.mjs"), "utf8");
 
-assert.match(
+assert.doesNotMatch(
   listenerSource,
-  /process\.env\.SHADOW_ENRICH_THREAD_METADATA === "YES"/,
-  "Group metadata enrichment must remain opt-in so a legacy GraphQL failure cannot block commands."
+  /new\s+CommandHandler/,
+  "The retired CommandHandler must not remain on the active listener path."
+);
+
+assert.doesNotMatch(
+  responseEngineSource,
+  /getThreadInfo|Thread\.create/,
+  "The response engine must not issue legacy thread-metadata requests before responding to a command."
+);
+
+assert.doesNotMatch(
+  bootstrapExtractorSource,
+  /graphql|api\/graphqlbatch|https?:\/\//i,
+  "Bootstrap extraction must remain pure and must not introduce an unverified GraphQL network fallback."
 );
 
 assert.match(

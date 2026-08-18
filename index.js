@@ -1,6 +1,5 @@
 import fs from "node:fs";
 import login from "@trunqkj3n/kaguya";
-import { listen } from "./src/listen/listen.js";
 import { commandMiddleware, eventMiddleware } from "./src/middleware/index.js";
 import sleep from "time-sleep";
 import { log, notifer } from "./src/logger/index.js";
@@ -8,6 +7,9 @@ import gradient from "gradient-string";
 import chokidar from "chokidar";
 import config from "./ShadowSetUp/config.js";
 import EventEmitter from "events";
+import { ShadowMessenger } from "./src/shadow/ShadowMessenger.js";
+import { ShadowResponseEngine } from "./src/shadow/ShadowResponseEngine.js";
+import { dispatchCommandEvent } from "./src/shadow/CommandRouter.js";
 
 class Shadow extends EventEmitter {
   constructor() {
@@ -19,7 +21,7 @@ class Shadow extends EventEmitter {
           color: "red",
         },
         {
-          message: `Error in the Garden of Shadows: ${err}`,
+          message: "Startup failed. Review only the safe status signals in the runtime log.",
           color: "white",
         },
       ]);
@@ -110,57 +112,65 @@ class Shadow extends EventEmitter {
           }
         }, 30000);
 
-        login({ appState: credentials }, connectionOptions, async (err, api) => {
-          loginSettled = true;
-          clearTimeout(loginTimeout);
+        const messenger = new ShadowMessenger({ login, appState: credentials, options: connectionOptions });
+        this.messenger = messenger;
+        let responder = null;
 
-          if (err || !api) {
-            this.emit("system:error", `Login failed: ${err?.message || err || "Unknown login error"}`);
+        messenger.once("apiReady", (api) => {
+          responder = new ShadowResponseEngine({ api, client: global.client });
+          log([{ message: "[ SHADOW RESPONSE ]: ", color: "green" }, { message: "Command engine initialized.", color: "white" }]);
+        });
+
+        messenger.on("status", (status) => {
+          if (status.type === "ready") {
+            log([{ message: "[ MQTT ]: ", color: "green" }, { message: "Messenger listener is ready for commands.", color: "white" }]);
+          } else if (status.type === "mqtt_connected") {
+            log([{ message: "[ MQTT ]: ", color: "green" }, { message: "WebSocket connected; waiting for Messenger sync.", color: "white" }]);
+          } else if (status.type === "mqtt_sync_recovered") {
+            log([{ message: "[ MQTT ]: ", color: "green" }, { message: "Messenger sync bootstrap recovered safely.", color: "white" }]);
+          } else if (status.type === "transport_started") {
+            log([{ message: "[ MQTT ]: ", color: "purple" }, { message: "Connecting to Messenger...", color: "white" }]);
+          }
+        });
+
+        messenger.on("diagnostic", (diagnostic) => {
+          if (diagnostic.type === "mqtt_topic") {
+            log([{ message: "[ MQTT TOPIC ]: ", color: "purple" }, { message: `Observed ${diagnostic.topic}.`, color: "white" }]);
+          } else if (diagnostic.type === "mqtt_bootstrap_outcome") {
+            log([{ message: "[ MQTT BOOTSTRAP ]: ", color: "yellow" }, { message: `${diagnostic.status}:${diagnostic.source}:${diagnostic.reason || "none"}`, color: "white" }]);
+          } else {
+            const shape = Array.isArray(diagnostic.shape) && diagnostic.shape.length > 0 ? diagnostic.shape.join(",") : "none";
+            log([{ message: "[ MQTT DIAGNOSTIC ]: ", color: "yellow" }, { message: `Unparsed transport event on ${diagnostic.topic}; fields=${shape}.`, color: "white" }]);
+          }
+        });
+
+        messenger.on("transportError", (transportError) => {
+          log([{ message: "[ MQTT ERROR ]: ", color: "red" }, { message: transportError.type || "mqtt_error", color: "white" }]);
+        });
+
+        messenger.on("event", async (event) => {
+          log([{ message: "[ MQTT EVENT ]: ", color: "purple" }, { message: `Received ${event.type || "unknown"} event (group: ${Boolean(event.isGroup)}).`, color: "white" }]);
+          if (!responder) {
+            log([{ message: "[ SHADOW RESPONSE ]: ", color: "yellow" }, { message: "Event arrived before command engine initialization.", color: "white" }]);
             return;
           }
 
-          api.setOptions(connectionOptions);
-
-          const handleMqttEvent = async (mqttError, event) => {
-            if (mqttError) {
-              if (mqttError.type === "ready") {
-                log([{ message: "[ MQTT ]: ", color: "green" }, { message: "Messenger listener is ready for commands.", color: "white" }]);
-                return;
-              }
-
-              const detail = mqttError.message || mqttError.error || "Unknown MQTT error";
-              log([{ message: "[ MQTT ERROR ]: ", color: "red" }, { message: detail, color: "white" }]);
-              return;
-            }
-
-            if (event?.type === "ready") {
-              log([{ message: "[ MQTT ]: ", color: "green" }, { message: "Messenger listener is ready for commands.", color: "white" }]);
-              return;
-            }
-
-            if (event?.type === "mqtt_connected") {
-              log([{ message: "[ MQTT ]: ", color: "green" }, { message: "WebSocket connected; waiting for Messenger sync.", color: "white" }]);
-              return;
-            }
-
-            if (event?.type === "mqtt_topic") {
-              log([{ message: "[ MQTT TOPIC ]: ", color: "purple" }, { message: `Observed ${event.topic || "unknown"}.`, color: "white" }]);
-              return;
-            }
-
-            if (event) {
-              log([{ message: "[ MQTT EVENT ]: ", color: "purple" }, { message: `Received ${event.type || "unknown"} event (group: ${Boolean(event.isGroup)}).`, color: "white" }]);
-              await listen({ api, event, client: global.client });
-            }
-          };
-
-          try {
-            api.listenMqtt(handleMqttEvent);
-            log([{ message: "[ MQTT ]: ", color: "purple" }, { message: "Connecting to Messenger...", color: "white" }]);
-          } catch (error) {
-            log([{ message: "[ CRITICAL ]: ", color: "red" }, { message: `Unable to start Messenger listener: ${error.message}`, color: "white" }]);
+          const result = await dispatchCommandEvent({ event, responder, telemetry: messenger.telemetry });
+          if (result.handled && result.command) {
+            log([{ message: "[ SHADOW RESPONSE ]: ", color: "green" }, { message: "Command response dispatched.", color: "white" }]);
           }
         });
+
+        messenger.connect()
+          .then(() => {
+            loginSettled = true;
+            clearTimeout(loginTimeout);
+          })
+          .catch(() => {
+            loginSettled = true;
+            clearTimeout(loginTimeout);
+            this.emit("system:error", "Messenger connection did not complete.");
+          });
       });
 
       this.displayIntro();
