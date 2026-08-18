@@ -455,17 +455,6 @@ ${listenerMarker}`);
       if (!source.includes(recoveryMarker)) throw new Error("[Kaguya patch] connection watchdog: recovery marker was not found.");
       source = source.replace(recoveryMarker, connectWatchdog);
     }
-    if (!source.includes("clearTimeout(shadowConnectTimeout);")) {
-      const errorMarker = "\tmqttClient.on('error', function (err) {\n";
-      const closeMarker = "\tmqttClient.on('close', function () {\n";
-      const connectedMarker = "\tmqttClient.on('connect', function () {\n";
-      if (!source.includes(errorMarker) || !source.includes(closeMarker) || !source.includes(connectedMarker)) {
-        throw new Error("[Kaguya patch] connection watchdog: lifecycle markers were not found.");
-      }
-      source = source.replace(errorMarker, `${errorMarker}\t\tclearTimeout(shadowConnectTimeout);\n`);
-      source = source.replace(closeMarker, `${closeMarker}\t\tclearTimeout(shadowConnectTimeout);\n`);
-      source = source.replace(connectedMarker, `${connectedMarker}\t\tclearTimeout(shadowConnectTimeout);\n`);
-    }
     if (!source.includes("shadowMqttConnected = true;")) {
       if (!source.includes(connectedMarker)) throw new Error("[Kaguya patch] bounded recovery: connect marker was not found.");
       source = source.replace(connectedMarker, `${connectedMarker}\t\tshadowMqttConnected = true;\n\t\tctx.shadowMqttRecoveryAttempts = 0;\n`);
@@ -485,6 +474,16 @@ ${listenerMarker}`);
       const boundedTimeoutRetry = `\t\tconst rTimeout = setTimeout(function () {\n\t\t\tshadowMqttRecoveryRequested = true;\n\t\t\tmqttClient.end();\n\t\t\tif (shadowRequestMqttRecovery(ctx, globalCallback, "MQTT_READY_TIMEOUT")) {\n\t\t\t\tlistenMqtt(defaultFuncs, api, ctx, globalCallback);\n\t\t\t}\n\t\t}, 5000);`;
       if (!source.includes(timeoutRetry)) throw new Error("[Kaguya patch] bounded recovery: readiness timeout block was not found.");
       source = source.replace(timeoutRetry, boundedTimeoutRetry);
+    }
+    if (!source.includes("clearTimeout(shadowConnectTimeout);")) {
+      const errorMarker = "\tmqttClient.on('error', function (err) {\n";
+      const closeMarker = "\tmqttClient.on('close', function () {\n";
+      if (!source.includes(errorMarker) || !source.includes(closeMarker) || !source.includes(connectedMarker)) {
+        throw new Error("[Kaguya patch] connection watchdog: lifecycle markers were not found.");
+      }
+      source = source.replace(errorMarker, `${errorMarker}\t\tclearTimeout(shadowConnectTimeout);\n`);
+      source = source.replace(closeMarker, `${closeMarker}\t\tclearTimeout(shadowConnectTimeout);\n`);
+      source = source.replace(connectedMarker, `${connectedMarker}\t\tclearTimeout(shadowConnectTimeout);\n`);
     }
     return source;
   },
