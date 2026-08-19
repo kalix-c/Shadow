@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node .",
+    "start": "SHADOW_RUNTIME_PROFILE=core node start.js",
     "health": "node app.js",
     "dev": "SHADOW_RUNTIME_PROFILE=core node .",
     "check": "SHADOW_RUNTIME_PROFILE=core node scripts/validate.mjs",
