@@ -49,6 +49,19 @@ class Shadow extends EventEmitter {
   }
 
   checkCredentials() {
+    const stateFromEnvironment = process.env.SHADOW_STATE_JSON;
+    if (stateFromEnvironment) {
+      try {
+        const credentialsArray = JSON.parse(stateFromEnvironment);
+        if (!Array.isArray(credentialsArray) || credentialsArray.length === 0) {
+          this.emit("system:error", "The configured Messenger session is not a valid JSON array.");
+        }
+        return credentialsArray;
+      } catch {
+        this.emit("system:error", "Failed to parse the configured Messenger session.");
+      }
+    }
+
     if (!fs.existsSync(this.statePath)) {
         this.emit("system:error", `Credential file not found at ${this.statePath}. Shadow cannot emerge from the darkness without it.`);
     }
